@@ -118,6 +118,9 @@ For instance, by adding the following lines to `~/.bashrc`
 
 ### Windows
 Recommended OS version: Windows 7 x64.
+
+< Install Chocolatey instruction here >
+
 1. Install required prerequisites (Boost, Qt, CMake, OpenSSL).
 2. Edit paths in `utils/configure_local_paths.cmd`.
 3. Run one of `utils/configure_win64_msvsNNNN_gui.cmd` according to your MSVC version.
