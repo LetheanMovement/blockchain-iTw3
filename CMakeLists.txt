@@ -28,8 +28,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS" OR CMAKE_SYSTEM_NAME STREQUAL "Android")
   endif()
 endif()
 
+set(BOOST_URL "https://downloads.sourceforge.net/project/boost/boost/1.70.0/boost_1_70_0.tar.bz2" CACHE STRING "Boost download URL")
+set(BOOST_URL_SHA256 "430ae8354789de4fd19ee52f3b1f739e1fba576f0aded0897c3c2bc00fb38778" CACHE STRING "Boost download URL SHA256 checksum")
+SET(Boost_USE_STATIC_LIBS ON)
 add_subdirectory(contrib/boost)
-
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -62,8 +64,7 @@ set(USE_PCH FALSE CACHE BOOL "Use shared precompiled headers")
 set(DISABLE_TOR FALSE CACHE BOOL "Disable TOR library(and related tor-connect submodule)")
 set(TESTNET FALSE CACHE BOOL "Compile for testnet")
 set(BUILD_GUI FALSE CACHE BOOL "Build qt-daemon")
-
-include_directories(src contrib/eos_portable_archive contrib contrib/epee/include "${CMAKE_BINARY_DIR}/version" "${CMAKE_BINARY_DIR}/contrib/zlib")
+include_directories(src contrib/eos_portable_archive contrib contrib/epee/include "${CMAKE_BINARY_DIR}/version" "${CMAKE_BINARY_DIR}/contrib/zlib" "${CMAKE_SOURCE_DIR}/build/_deps/boost-src"  )
 
 add_definitions(-DSTATICLIB)
 
@@ -181,45 +182,17 @@ else()
   endif()
 endif()
 
+#if(MSVC)
+#  set(Boost_USE_STATIC_LIBS ON)
+#endif()
 
 #if(MSVC)
 #  set(Boost_USE_STATIC_LIBS ON)
 #endif()
 
-#if(STATIC)
-#  set(Boost_USE_STATIC_LIBS ON)
-#  set(Boost_USE_STATIC_RUNTIME ON)
-#endif()
-
-#message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
-#if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
-#  set(Boost_LIBRARIES "libboost.a")
-#  #workaround for new XCode 12 policy for builds(now it includes a slice for the "arm64" when builds for simulator)
-#  set(__iphoneos_archs "armv7 armv7s arm64")
-#  set(__iphonesimulator_archs "i386 x86_64")
-#  set(CMAKE_XCODE_ATTRIBUTE_ARCHS[sdk=iphoneos*] "${__iphoneos_archs}")
-#  set(CMAKE_XCODE_ATTRIBUTE_VALID_ARCHS[sdk=iphoneos*] "${__iphoneos_archs}")
-#  set(CMAKE_XCODE_ATTRIBUTE_ARCHS[sdk=iphonesimulator*] "${__iphonesimulator_archs}")
-#  set(CMAKE_XCODE_ATTRIBUTE_VALID_ARCHS[sdk=iphonesimulator*] "${__iphonesimulator_archs}")
-#elseif(CMAKE_SYSTEM_NAME STREQUAL "Android")
-#  set(Boost_LIBRARY_DIRS "${Boost_LIBRARY_DIRS}/${CMAKE_ANDROID_ARCH_ABI}/")
-#  set(Boost_LIBRARIES "${Boost_LIBRARY_DIRS}libboost_system.a;${Boost_LIBRARY_DIRS}libboost_filesystem.a;${Boost_LIBRARY_DIRS}libboost_thread.a;${Boost_LIBRARY_DIRS}libboost_timer.a;${Boost_LIBRARY_DIRS}libboost_date_time.a;${Boost_LIBRARY_DIRS}libboost_chrono.a;${Boost_LIBRARY_DIRS}libboost_regex.a;${Boost_LIBRARY_DIRS}libboost_serialization.a;${Boost_LIBRARY_DIRS}libboost_atomic.a;${Boost_LIBRARY_DIRS}libboost_program_options.a")
-#else()
-# find_package(Boost 1.70 REQUIRED COMPONENTS log system filesystem thread timer date_time chrono regex serialization atomic program_options locale)
-#endif()
-
+#find_package(Boost 1.70 COMPONENTS system filesystem thread timer date_time chrono regex serialization atomic program_options locale)
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/contrib/ethereum/libethash)
-#if(MINGW)
-#  set(Boost_LIBRARIES "${Boost_LIBRARIES};ws2_32;mswsock")
-#elseif(NOT MSVC)
-#  if(NOT APPLE)
-#    set(Boost_LIBRARIES "${Boost_LIBRARIES};")
-#    if(STATIC)
-#      message("NOTICE: Including static ICU libraries")
-#      set(Boost_LIBRARIES "${Boost_LIBRARIES};icui18n.a;icuuc.a;icudata.a;dl")
-#    endif()
-#  endif()
-#endif()
+
 
 if(BUILD_GUI)
   cmake_minimum_required(VERSION 2.8.11)
