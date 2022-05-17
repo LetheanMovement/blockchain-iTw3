@@ -43,8 +43,9 @@ jobs:
           files: ${{ github.workspace }}/server-linux-amd64.tar
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'new-main/')
+        if: startsWith(github.ref, `ref/head/`)
         with:
+          name: ${{github.ref_name}}-${{github.run_id}}
           prerelease: true
           generate_release_notes: true
           append_body: true
