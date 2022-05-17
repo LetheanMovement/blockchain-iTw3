@@ -42,5 +42,5 @@ jobs:
           cache-to: ghcr.io/letheanvpn/blockchain-itw3:testnet-${{ github.ref_name }}
           cache-from: ghcr.io/letheanvpn/blockchain-itw3:testnet-${{ github.ref_name }}
           push: true
-          tags: lthn/chain-itw3:testnet-${{ github.ref_name }},ghcr.io/letheanvpn/blockchain-itw3:testnet-${{ github.ref_name }}
+          tags: lthn/chain:testnet-${{ github.ref_name }},ghcr.io/letheanvpn/blockchain-itw3:testnet-${{ github.ref_name }}
 
