@@ -61,7 +61,7 @@ USER lethean:lethean
 
 WORKDIR /home/lethean
 
-COPY --chmod=0777 --chown=lethean:lethean --from=export / /usr/local/bin
+COPY --chmod=0777 --chown=lethean:lethean --from=export / .
 
 # blockchain loaction
 VOLUME /home/lethean/data
