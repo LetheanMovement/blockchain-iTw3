@@ -28,6 +28,13 @@
 #   - CMake Version:    CMAKE_VERSION_DOT, CMAKE_HASH
 #   - Boost Version:    BOOST_VERSION, BOOST_VERSION_DOT, BOOST_HASH
 #   - OpenSSL Version:  OPENSSL_VERSION_DOT, OPENSSL_HASH
+#
+# Exporting built binaries can be done targeting the scratch layer and setting the output option
+#   docker build -t chain/testnet --target export -o artifacts
+#
+# Developer builds, to make a build container run the first command, once built, use only the second command
+#   1) docker build --target build -t local/chain:developer -f utils/docker/Dockerfile .
+#   2) docker run -v $(pwd):/project local/chain:developer
 
 FROM lthn/build:server as build
 
@@ -40,12 +47,6 @@ WORKDIR /project/build
 RUN cmake -D STATIC=true -D ARCH=x86-64 -D TESTNET=TRUE -D CMAKE_BUILD_TYPE=Release ..
 
 RUN make -j${THREADS} daemon simplewallet
-
-# Export stage; scratch is a empty fs you can use this image to build the assets with
-#   docker build -t chain/testnet --target export -o artifacts
-#
-# Developer builds
-#   docker run -v $(pwd):/project --target export -o artifacts lthn/chain:developer
 
 FROM scratch as export
 COPY --chmod=0777 --from=build /project/build/src/letheand /
