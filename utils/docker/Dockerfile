@@ -69,4 +69,4 @@ VOLUME /home/lethean/data
 EXPOSE 31121 31211
 
 ENTRYPOINT ["./letheand"]
-CMD ["--disable-upnp", "--rpc-bind-ip=0.0.0.0", "--log-level=0", "--data-dir=/home/lethean/data"]
+CMD ["--disable-upnp", "--non-interactive", "--rpc-bind-ip=0.0.0.0", "--log-level=0", "--data-dir=/home/lethean/data"]
