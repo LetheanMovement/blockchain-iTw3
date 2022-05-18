@@ -35,6 +35,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Docker Build
+        if: ${{ github.event_name != 'pull_request' }}
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -43,4 +44,14 @@ jobs:
           cache-from: ghcr.io/letheanvpn/blockchain-itw3:testnet-${{ github.ref_name }}
           push: true
           tags: lthn/chain:testnet-${{ github.ref_name }},ghcr.io/letheanvpn/blockchain-itw3:testnet-${{ github.ref_name }}
+      - name: Docker Build
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: utils/docker/Dockerfile
+          cache-to: ghcr.io/letheanvpn/blockchain-itw3:testnet-${{ github.head_ref }}
+          cache-from: ghcr.io/letheanvpn/blockchain-itw3:testnet-${{ github.head_ref }}
+          push: true
+          tags: lthn/chain:testnet-${{ github.head_ref }},ghcr.io/letheanvpn/blockchain-itw3:testnet-${{ github.head_ref }}
 
