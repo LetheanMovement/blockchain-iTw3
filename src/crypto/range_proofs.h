@@ -52,7 +52,7 @@ namespace crypto
     return multiply_de_bruijn_bit_position[((uint32_t)((v & -(int32_t)v) * 0x077CB531U)) >> 27];
   }
 
-  
+
   ////////////////////////////////////////
   // crypto trait for Zano
   ////////////////////////////////////////
@@ -76,7 +76,7 @@ namespace crypto
 
     static const scalar_t& get_initial_transcript()
     {
-      static scalar_t value = hash_helper_t::hs("Zano BP+ initial transcript");
+      static scalar_t value = hash_helper_t::hs("Lethean BP+ initial transcript");
       return value;
     }
 
@@ -98,7 +98,7 @@ namespace crypto
       static bool calculated = false;
       if (!calculated)
       {
-        scalar_t hash_buf[2] = { hash_helper_t::hs("Zano BP+ generator"), 0 };
+        scalar_t hash_buf[2] = { hash_helper_t::hs("Lethean BP+ generator"), 0 };
         for (size_t i = 0; i < 2 * c_bpp_mn_max; ++i)
         {
           hash_buf[1].m_u64[0] = i;
@@ -126,7 +126,7 @@ namespace crypto
   template<size_t N, size_t values_max>
   const point_t& bpp_crypto_trait_zano<N, values_max>::bpp_H2 = c_point_H2;
 
-  
+
   // efficient multiexponentiation (naive stub implementation atm, TODO)
   template<typename CT>
   bool multiexp_and_check_being_zero(const scalar_vec_t& g_scalars, const scalar_vec_t& h_scalars, const point_t& summand)

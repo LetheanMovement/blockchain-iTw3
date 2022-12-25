@@ -173,7 +173,7 @@ ENABLE_SHARED_PCH(connectivity_tool CONN_TOOL)
 ENABLE_SHARED_PCH_EXECUTABLE(connectivity_tool)
 
 add_executable(simplewallet ${SIMPLEWALLET})
-add_dependencies(simplewallet version) 
+add_dependencies(simplewallet version)
 target_link_libraries(simplewallet wallet rpc currency_core crypto common zlibstatic ethash ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
 
 ENABLE_SHARED_PCH(simplewallet SIMPLEWALLET)
@@ -181,7 +181,7 @@ ENABLE_SHARED_PCH_EXECUTABLE(simplewallet)
 
 set_property(TARGET common crypto currency_core rpc stratum wallet PROPERTY FOLDER "libs")
 set_property(TARGET daemon simplewallet connectivity_tool PROPERTY FOLDER "prog")
-set_property(TARGET daemon PROPERTY OUTPUT_NAME "zanod")
+set_property(TARGET daemon PROPERTY OUTPUT_NAME "letheand")
 
 if(BUILD_GUI)
 
@@ -192,11 +192,11 @@ if(BUILD_GUI)
   set(CMAKE_AUTOMOC ON)
   set(CMAKE_INCLUDE_CURRENT_DIR ON)
   SET(MACOSX_BUNDLE_ICON_FILE app.icns)
-  add_executable(Zano WIN32 MACOSX_BUNDLE ${QTDAEMON} )
-  ENABLE_SHARED_PCH(Zano QTDAEMON)
-  ENABLE_SHARED_PCH_EXECUTABLE(Zano)
+  add_executable(Lethean WIN32 MACOSX_BUNDLE ${QTDAEMON} )
+  ENABLE_SHARED_PCH(Lethean QTDAEMON)
+  ENABLE_SHARED_PCH_EXECUTABLE(Lethean)
 	  
-  QT5_USE_MODULES(Zano WebEngineWidgets WebChannel)
+  QT5_USE_MODULES(Lethean WebEngineWidgets WebChannel)
   find_package(Qt5PrintSupport REQUIRED)
 
   target_link_libraries(Zano wallet rpc currency_core crypto common zlibstatic ethash Qt5::WebEngineWidgets Qt5::PrintSupport ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})

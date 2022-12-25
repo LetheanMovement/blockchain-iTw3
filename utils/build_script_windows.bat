@@ -68,7 +68,7 @@ IF %ERRORLEVEL% NEQ 0 (
   goto error
 )
 
-msbuild src/Zano.vcxproj /p:SubSystem="WINDOWS,5.02" /p:Configuration=Release /t:Build
+msbuild src/Lethean.vcxproj /p:SubSystem="WINDOWS,5.02" /p:Configuration=Release /t:Build
 
 IF %ERRORLEVEL% NEQ 0 (
   goto error
@@ -103,12 +103,12 @@ cd src\release
 
 mkdir bunch
 
-copy /Y Zano.exe bunch
-copy /Y zanod.exe bunch
+copy /Y Lethean.exe bunch
+copy /Y letheand.exe bunch
 copy /Y simplewallet.exe bunch
 copy /Y *.pdb bunch
 
-%QT_MSVC_PATH%\bin\windeployqt.exe bunch\Zano.exe
+%QT_MSVC_PATH%\bin\windeployqt.exe bunch\Lethean.exe
 
 cd bunch
 
@@ -178,25 +178,25 @@ IF %ERRORLEVEL% NEQ 0 (
 
 @echo "   UPLOADING TO SERVER ...."
 
-pscp -load zano_build_server %installer_path% build.zano.org:/var/www/html/builds
+pscp -load lethean_build_server %installer_path% build.lethean.org:/var/www/html/builds
 IF %ERRORLEVEL% NEQ 0 (
   @echo "FAILED TO UPLOAD EXE TO SERVER"
   goto error
 )
 call :sha256 %installer_path% installer_checksum
 
-pscp -load zano_build_server %build_zip_path% build.zano.org:/var/www/html/builds
+pscp -load lethean_build_server %build_zip_path% build.lethean.org:/var/www/html/builds
 IF %ERRORLEVEL% NEQ 0 (
   @echo "FAILED TO UPLOAD ZIP TO SERVER"
   goto error
 )
 call :sha256 %build_zip_path% build_zip_checksum
 
-set mail_msg="New %build_prefix% %TESTNET_LABEL%build for win-x64:<br>INST: https://build.zano.org/builds/%installer_file% <br>sha256: %installer_checksum%<br><br>ZIP:  https://build.zano.org/builds/%build_zip_filename% <br>sha256: %build_zip_checksum%<br>"
+set mail_msg="New %build_prefix% %TESTNET_LABEL%build for win-x64:<br>INST: https://build.lethean.org/builds/%installer_file% <br>sha256: %installer_checksum%<br><br>ZIP:  https://build.lethean.org/builds/%build_zip_filename% <br>sha256: %build_zip_checksum%<br>"
 
 echo %mail_msg%
 
-senditquiet.exe  -t %emails% -subject "Zano win-x64 %build_prefix% %TESTNET_LABEL%build %version%" -body %mail_msg%
+senditquiet.exe  -t %emails% -subject "Lethean win-x64 %build_prefix% %TESTNET_LABEL%build %version%" -body %mail_msg%
 
 
 goto success
