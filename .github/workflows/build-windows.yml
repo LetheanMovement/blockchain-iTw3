@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 0
           submodules: recursive
       - name: Cache Chocolatey Dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: C:\ProgramData\chocolatey\lib
           key: choco-cache-${{ hashFiles('**/dependencies.config') }}
@@ -54,7 +54,6 @@ jobs:
           BUILDS_PATH: C:\dev\deploy\zano
           OPENSSL_ROOT_DIR: C:\dev\_sdk\OpenSSL-Win64
           BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
-        shell: powershell
         run: |
           refreshenv
           mkdir build && cd build
