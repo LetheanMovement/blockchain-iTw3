@@ -65,10 +65,10 @@ jobs:
           msbuild version.vcxproj /p:Configuration=Release /t:Build
           msbuild src/daemon.vcxproj /p:Configuration=Release /t:Build
           msbuild src/simplewallet.vcxproj /p:Configuration=Release /t:Build
-      - name: Install zip
-        uses: montudor/action-zip@v1
-      - run: zip -qq -r explorer.zip letheand.exe simplewallet.exe
-        working-directory: build/src
+      - uses: vimtor/action-zip@v1
+        with:
+          files: build/src/release/src/letheand.exe build/src/release/src/simplewallet.exe
+          dest: testnet-server-windows-amd64.zip
       - uses: actions/upload-artifact@v3
         with:
           name: testnet-server-windows-amd64
