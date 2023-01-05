@@ -68,7 +68,7 @@ jobs:
       - name: Install zip
         uses: montudor/action-zip@v1
       - run: zip -qq -r explorer.zip letheand.exe simplewallet.exe
-        working-directory: dist
+        working-directory: build/src
       - uses: actions/upload-artifact@v3
         with:
           name: testnet-server-windows-amd64
