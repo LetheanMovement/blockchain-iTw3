@@ -46,6 +46,10 @@ jobs:
           platform_version: 2022
           toolset: msvc
           link: static
+      - name: Set up Visual Studio shell
+        uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x64
       - name: build server
         env:
           QT_PREFIX_PATH: C:\dev\_sdk\Qt5.11.2\5.11.2
@@ -58,7 +62,6 @@ jobs:
           refreshenv
           mkdir build && cd build
           cmake -D TESTNET=TRUE -D OPENSSL_ROOT_DIR="%OPENSSL_ROOT_DIR%" -D CMAKE_PREFIX_PATH="%QT_MSVC_PATH%" -D BUILD_GUI=false -D STATIC=FALSE -G "Visual Studio 17 2022" -T host=x64 -DBoost_INCLUDE_DIR="${{steps.install-boost.outputs.BOOST_ROOT}}\include" -DBoost_LIBRARY_DIRS="${{steps.install-boost.outputs.BOOST_ROOT}}\lib" ..
-          & C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat x86_amd64
           msbuild version.vcxproj /p:SubSystem="CONSOLE,5.02"  /p:Configuration=Release /t:Build
           msbuild src/daemon.vcxproj /p:SubSystem="CONSOLE,5.02"  /p:Configuration=Release /t:Build
           msbuild src/simplewallet.vcxproj /p:SubSystem="CONSOLE,5.02"  /p:Configuration=Release /t:Build
