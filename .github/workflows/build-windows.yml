@@ -67,7 +67,7 @@ jobs:
           msbuild src/simplewallet.vcxproj /p:Configuration=Release /t:Build
       - uses: vimtor/action-zip@v1
         with:
-          files: ${{ github.workspace }}\build\src\release\src\letheand.exe ${{ github.workspace }}\build\src\release\src\simplewallet.exe
+          files: ${{ github.workspace }}\build\src\Release\letheand.exe ${{ github.workspace }}\build\src\Release\simplewallet.exe
           dest: ${{ github.workspace }}\testnet-server-windows-amd64.zip
       - uses: actions/upload-artifact@v3
         with:
