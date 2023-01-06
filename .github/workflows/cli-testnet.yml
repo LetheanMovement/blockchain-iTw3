@@ -106,12 +106,11 @@ jobs:
           INNOSETUP_PATH: C:\Program Files (x86)\Inno Setup 5\ISCC.exe
           ETC_BINARIES_PATH: C:\dev\deploy\etc-binaries
           BUILDS_PATH: C:\dev\deploy\zano
-          OPENSSL_ROOT_DIR: C:\dev\_sdk\OpenSSL-Win64
           BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
         run: |
           refreshenv
           mkdir build && cd build
-          cmake -D TESTNET=TRUE -D OPENSSL_ROOT_DIR="%OPENSSL_ROOT_DIR%" -D CMAKE_PREFIX_PATH="%QT_MSVC_PATH%" -D BUILD_GUI=false -D STATIC=FALSE -G "Visual Studio 17 2022" -T host=x64 -DBoost_INCLUDE_DIR="${{steps.install-boost.outputs.BOOST_ROOT}}\include" -DBoost_LIBRARY_DIRS="${{steps.install-boost.outputs.BOOST_ROOT}}\lib" ..
+          cmake -D TESTNET=TRUE -D CMAKE_PREFIX_PATH="%QT_MSVC_PATH%" -D BUILD_GUI=false -D STATIC=FALSE -G "Visual Studio 17 2022" -T host=x64 -DBoost_INCLUDE_DIR="${{steps.install-boost.outputs.BOOST_ROOT}}\include" -DBoost_LIBRARY_DIRS="${{steps.install-boost.outputs.BOOST_ROOT}}\lib" ..
           msbuild version.vcxproj /p:Configuration=Release /t:Build
           msbuild src/daemon.vcxproj /p:Configuration=Release /t:Build
           msbuild src/simplewallet.vcxproj /p:Configuration=Release /t:Build
