@@ -1,4 +1,4 @@
-name: Build - Windows
+name: cli-testnet
 
 on:
   # Allows you to run this workflow manually from the Actions tab
@@ -11,7 +11,57 @@ on:
       - '**.md'
 
 jobs:
-  windows:
+  linux-amd64:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: update apt
+        run: sudo apt update & sudo apt-get upgrade -y
+      - name: install dependencies
+        run: sudo apt-get install -y python-dev autotools-dev libboost-all-dev libicu-dev libbz2-dev git screen checkinstall zlib1g-dev
+      - name: build server
+        run: make static-release-testnet
+      - name: Tar files
+        run: cd build/src && tar -cvf ../../testnet-server-linux-amd64.tar letheand simplewallet
+      - uses: actions/upload-artifact@v3
+        with:
+          name: testnet-server-linux-amd64
+          if-no-files-found: error
+          path: testnet-server-linux-amd64.tar
+  macos-amd64:
+    runs-on: macos-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: install dependencies
+        run: brew install openssl boost icu4c
+      - name: build server
+        env:
+          PKG_CONFIG_PATH: "/usr/local/opt/openssl@3/lib/pkgconfig"
+        run: |
+          export LIBRARY_PATH=${LIBRARY_PATH}:/usr/local/opt/icu4c/lib
+          make static-release-testnet
+      - name: Tar files
+        run: cd build/src && tar -cvf ../../testnet-server-macos-amd64.tar letheand simplewallet
+      - uses: actions/upload-artifact@v3
+        with:
+          name: testnet-server-macos-amd64
+          if-no-files-found: error
+          path: testnet-server-macos-amd64.tar
+  windows-amd64:
     runs-on: windows-latest
     steps:
       - name: Cancel Previous Runs
