@@ -36,7 +36,7 @@ set(UPNP_LIBRARIES "libminiupnpc-static" PARENT_SCOPE)
 
 
 
-set_property(TARGET libminiupnpc-static PROPERTY FOLDER "contrib")
+#set_property(TARGET libminiupnpc-static PROPERTY FOLDER "contrib")
 set_property(TARGET zlibstatic PROPERTY FOLDER "contrib")
 set_property(TARGET mdbx PROPERTY FOLDER "contrib")
 set_property(TARGET lmdb PROPERTY FOLDER "contrib")
@@ -44,7 +44,7 @@ if( NOT DISABLE_TOR)
   set_property(TARGET tor-connect PROPERTY FOLDER "contrib")
 endif()
 
-set_property(TARGET upnpc-static mdbx_chk mdbx_copy mdbx_dump mdbx_load mdbx_stat PROPERTY FOLDER "unused")
+set_property(TARGET mdbx_chk mdbx_copy mdbx_dump mdbx_load mdbx_stat PROPERTY FOLDER "unused")
 
 if(MSVC)
   set_property(TARGET ntdll_extra_target PROPERTY FOLDER "unused")
@@ -52,9 +52,9 @@ endif()
 
 
 if(MSVC)
-  set_property(TARGET upnpc-static APPEND_STRING PROPERTY COMPILE_FLAGS " /wd4244 /wd4267")
+#  set_property(TARGET upnpc-static APPEND_STRING PROPERTY COMPILE_FLAGS " /wd4244 /wd4267")
   set_property(TARGET zlibstatic APPEND_STRING PROPERTY COMPILE_FLAGS " /wd4267 /wd4267")
 else()
-  set_property(TARGET upnpc-static APPEND_STRING PROPERTY COMPILE_FLAGS " -Wno-undef -Wno-unused-result -Wno-unused-value -Wno-implicit-fallthrough -Wno-ignored-qualifiers ")
+#  set_property(TARGET upnpc-static APPEND_STRING PROPERTY COMPILE_FLAGS " -Wno-undef -Wno-unused-result -Wno-unused-value -Wno-implicit-fallthrough -Wno-ignored-qualifiers ")
   set_property(TARGET zlibstatic APPEND_STRING PROPERTY COMPILE_FLAGS " -Wno-undef -Wno-unused-result -Wno-unused-value -Wno-implicit-fallthrough -Wno-ignored-qualifiers ")
 endif()
