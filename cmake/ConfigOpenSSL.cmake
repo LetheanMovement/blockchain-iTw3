@@ -16,3 +16,7 @@ if(STATIC AND NOT IOS)
         set(OPENSSL_LIBRARIES "${OPENSSL_LIBRARIES};${CMAKE_DL_LIBS};${CMAKE_THREAD_LIBS_INIT}")
     endif()
 endif()
+
+if (WIN32)
+    list(APPEND OPENSSL_LIBRARIES ws2_32 crypt32)
+endif()
