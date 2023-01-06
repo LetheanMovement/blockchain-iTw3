@@ -16,7 +16,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS" OR CMAKE_SYSTEM_NAME STREQUAL "Android")
 endif()
 
 
-find_package(MiniUPnPc REQUIRED)
+find_package(Miniupnpc REQUIRED)
 
 message(STATUS "Using in-tree miniupnpc")
 set(UPNPC_NO_INSTALL TRUE CACHE BOOL "Disable miniupnp installation" FORCE)
