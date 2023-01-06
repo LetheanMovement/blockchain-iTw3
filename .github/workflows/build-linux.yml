@@ -29,8 +29,7 @@ jobs:
       - name: build server
         run: |
           mkdir build && cd build
-          cmake -D STATIC=true -D ARCH=x86-64 -D TESTNET=TRUE -D CMAKE_BUILD_TYPE=Release ..
-          make -j2 daemon simplewallet
+          make static-release-testnet
       - name: Tar files
         run: cd build/src && tar -cvf ../../testnet-server-linux-amd64.tar letheand simplewallet
       - uses: actions/upload-artifact@v3
