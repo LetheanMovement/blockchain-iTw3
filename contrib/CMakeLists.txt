@@ -1,6 +1,6 @@
-set(UPNPC_BUILD_STATIC ON CACHE BOOL "Build static library")
-set(UPNPC_BUILD_SHARED OFF CACHE BOOL "Build shared library")
-set(UPNPC_BUILD_TESTS OFF CACHE BOOL "Build test executables")
+#set(UPNPC_BUILD_STATIC ON CACHE BOOL "Build static library")
+#set(UPNPC_BUILD_SHARED OFF CACHE BOOL "Build shared library")
+#set(UPNPC_BUILD_TESTS OFF CACHE BOOL "Build test executables")
 add_subdirectory(zlib)
 add_subdirectory(db)
 add_subdirectory(ethereum)
@@ -16,7 +16,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS" OR CMAKE_SYSTEM_NAME STREQUAL "Android")
 endif()
 
 
-find_package(Miniupnpc REQUIRED)
+find_package(MiniUPnPc REQUIRED)
 
 message(STATUS "Using in-tree miniupnpc")
 set(UPNPC_NO_INSTALL TRUE CACHE BOOL "Disable miniupnp installation" FORCE)
