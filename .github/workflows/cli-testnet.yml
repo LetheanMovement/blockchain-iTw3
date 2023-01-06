@@ -10,9 +10,16 @@ on:
     paths-ignore:
       - '**.md'
 
+env:
+  CCACHE_SETTINGS: |
+    ccache --max-size=150M
+    ccache --set-config=compression=true
+
 jobs:
   linux-amd64:
     runs-on: ubuntu-20.04
+    env:
+      CCACHE_TEMPDIR: /tmp/.ccache-temp
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.1
@@ -22,12 +29,19 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+      - uses: actions/cache@v2
+        with:
+          path: ~/.ccache
+          key: ccache-${{ runner.os }}-build-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-build-
       - name: update apt
         run: sudo apt update & sudo apt-get upgrade -y
       - name: install dependencies
-        run: sudo apt-get install -y python-dev autotools-dev libboost-all-dev libicu-dev libbz2-dev git screen checkinstall zlib1g-dev
+        run: sudo apt-get install -y python-dev autotools-dev libboost-all-dev libicu-dev libbz2-dev git screen checkinstall zlib1g-dev ccache miniupnpc
       - name: build server
-        run: make static-release-testnet -j2
+        run: |
+          ${{env.CCACHE_SETTINGS}}
+          make static-release-testnet -j3
       - name: Tar files
         run: cd build/release/src && tar -cvf ../../../testnet-server-linux-amd64.tar letheand simplewallet
       - uses: actions/upload-artifact@v3
@@ -37,6 +51,8 @@ jobs:
           path: testnet-server-linux-amd64.tar
   macos-amd64:
     runs-on: macos-latest
+    env:
+      CCACHE_TEMPDIR: /tmp/.ccache-temp
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.1
@@ -46,14 +62,20 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+      - uses: actions/cache@v2
+        with:
+          path: /Users/runner/Library/Caches/ccache
+          key: ccache-${{ runner.os }}-build-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-build-
       - name: install dependencies
-        run: brew install openssl boost icu4c
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install openssl boost icu4c ccache miniupnpc
       - name: build server
         env:
           PKG_CONFIG_PATH: "/usr/local/opt/openssl@3/lib/pkgconfig"
         run: |
+          ${{env.CCACHE_SETTINGS}}
           export LIBRARY_PATH=${LIBRARY_PATH}:/usr/local/opt/icu4c/lib
-          make release-testnet -j2
+          make release-testnet -j3
       - name: Tar files
         run: cd build/release/src && tar -cvf ../../../testnet-server-macos-amd64.tar letheand simplewallet
       - uses: actions/upload-artifact@v3
@@ -72,6 +94,11 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+      - uses: actions/cache@v2
+        with:
+          path: C:\Users\runneradmin\.ccache
+          key: ccache-${{ runner.os }}-build-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-build-
       - name: Cache Chocolatey Dependencies
         uses: actions/cache@v3
         with:
@@ -83,6 +110,7 @@ jobs:
         run: |
           choco install qt5-default --version 5.15.2.20211228 -y
           choco install openssl --version 1.1.1.1500 -y
+          choco install ccache -y
       - name: install msvc toolset
         uses: ilammy/msvc-dev-cmd@v1
       - name: Install boost
@@ -110,6 +138,7 @@ jobs:
           OPENSSL_ROOT_DIR: C:\ProgramData\chocolatey\lib\OpenSSL-Win64
         run: |
           refreshenv
+          ${{env.CCACHE_SETTINGS}}
           mkdir build && cd build
           cmake -D TESTNET=TRUE -D OPENSSL_ROOT_DIR="%OPENSSL_ROOT_DIR%" -D CMAKE_PREFIX_PATH="%QT_MSVC_PATH%" -D BUILD_GUI=false -D STATIC=FALSE -G "Visual Studio 17 2022" -T host=x64 -DBoost_INCLUDE_DIR="${{steps.install-boost.outputs.BOOST_ROOT}}\include" -DBoost_LIBRARY_DIRS="${{steps.install-boost.outputs.BOOST_ROOT}}\lib" ..
           msbuild version.vcxproj /p:Configuration=Release /t:Build
