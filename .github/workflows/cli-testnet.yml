@@ -29,7 +29,7 @@ jobs:
       - name: build server
         run: make static-release-testnet -j2
       - name: Tar files
-        run: cd build/release/src && tar -cvf ../../testnet-server-linux-amd64.tar letheand simplewallet
+        run: cd build/release/src && tar -cvf ../../../testnet-server-linux-amd64.tar letheand simplewallet
       - uses: actions/upload-artifact@v3
         with:
           name: testnet-server-linux-amd64
