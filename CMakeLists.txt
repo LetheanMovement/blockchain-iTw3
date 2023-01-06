@@ -16,8 +16,9 @@ set(VERSION "1.0")
 list(INSERT CMAKE_MODULE_PATH 0
         "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+if(NOT MSVC)
 include(ConfigOpenSSL)
-
+endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS" OR CMAKE_SYSTEM_NAME STREQUAL "Android")
   add_definitions(-DMOBILE_WALLET_BUILD)
   if(CMAKE_SYSTEM_NAME STREQUAL "iOS" )
