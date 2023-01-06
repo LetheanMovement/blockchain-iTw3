@@ -27,9 +27,7 @@ jobs:
       - name: install dependencies
         run: sudo apt-get install -y python-dev autotools-dev libboost-all-dev libicu-dev libbz2-dev git screen checkinstall zlib1g-dev
       - name: build server
-        run: |
-          mkdir build && cd build
-          make static-release-testnet
+        run: make static-release-testnet
       - name: Tar files
         run: cd build/src && tar -cvf ../../testnet-server-linux-amd64.tar letheand simplewallet
       - uses: actions/upload-artifact@v3
