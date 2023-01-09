@@ -9,3 +9,6 @@
 	path = contrib/tor-connect
 	url = https://github.com/letheanVPN/tor-connect.git
 	branch = main
+[submodule "depends"]
+	path = depends
+	url = https://github.com/dAppServer/depends.git

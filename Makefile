@@ -23,6 +23,12 @@ define CMAKE
   mkdir -p $1 && cd $1 && $2 ../../
 endef
 
+
+depends:
+	cd depends && $(MAKE) HOST=$(target) && cd .. && mkdir -p build/$(target)/release
+	cd build/$(target)/release && cmake -DCMAKE_TOOLCHAIN_FILE=$(CURDIR)/depends/$(target)/share/toolchain.cmake ../../.. && $(MAKE)
+
+
 build = build
 dir_debug = $(build)/debug
 dir_release = $(build)/release
@@ -94,4 +100,4 @@ clean:
 tags:
 	ctags -R --sort=1 --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++ src contrib tests/gtest
 
-.PHONY: all release debug static static-release gui gui-release gui-static gui-release-static gui-debug test test-release test-debug clean tags
+.PHONY: all release debug static static-release gui gui-release gui-static gui-release-static gui-debug test test-release test-debug clean tags depends
