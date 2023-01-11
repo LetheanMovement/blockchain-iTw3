@@ -201,7 +201,7 @@ if(BUILD_GUI)
 
   target_link_libraries(Lethean wallet rpc currency_core crypto common zlibstatic ethash Qt5::WebEngineWidgets Qt5::PrintSupport ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
   if (UNIX AND NOT APPLE)
-	target_link_libraries(Zano rt)
+	target_link_libraries(Lethean rt)
   endif()
 
   if(APPLE)
@@ -221,9 +221,12 @@ if(BUILD_GUI)
   set(CMAKE_AUTOMOC OFF)
 
   # GUI convenience "bundle"
-  # set(GUI_DIR ${CMAKE_CURRENT_BINARY_DIR}/gui)
-  # set_target_properties(Lethean PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${GUI_DIR})
-  # add_custom_command(TARGET Lethean POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${HTML_DIR} ${GUI_DIR}/html)
+  set(GUI_DIR ${CMAKE_CURRENT_BINARY_DIR}/gui)
+  set_target_properties(Lethean PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${GUI_DIR})
+  if(APPLE)
+    set(GUI_DIR ${CMAKE_CURRENT_BINARY_DIR}/gui/Lethean.app/Contents/MacOS)
+  endif()
+  add_custom_command(TARGET Lethean POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${HTML_DIR} ${GUI_DIR}/html)
 endif()
 
 if(APPLE)

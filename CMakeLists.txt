@@ -92,7 +92,7 @@ set(USE_PCH FALSE CACHE BOOL "Use shared precompiled headers")
 set(DISABLE_TOR FALSE CACHE BOOL "Disable TOR library(and related tor-connect submodule)")
 set(TESTNET FALSE CACHE BOOL "Compile for testnet")
 set(MUTE_ERRORS TRUE CACHE BOOL "Disable Error Suppression")
-set(BUILD_GUI FALSE CACHE BOOL "Build qt-daemon")
+set(BUILD_GUI TRUE CACHE BOOL "Build qt-daemon")
 
 if(TESTNET)
   message("!!!!!! NOTICE: Project is building for TESTNET !!!!!!")
