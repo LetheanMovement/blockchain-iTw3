@@ -42,7 +42,7 @@ jobs:
         run: |
           ${{env.CCACHE_SETTINGS}}
           export LIBRARY_PATH=${LIBRARY_PATH}:/usr/local/opt/icu4c/lib
-          make gui-release-testnet -j3
+          make macos-gui -j3
       - name: Tar files
         run: cd build/release/src/gui && tar -cvf ../../../../testnet-desktop-macos-amd64.tar Lethean.app
       - uses: actions/upload-artifact@v3
