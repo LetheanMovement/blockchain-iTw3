@@ -91,7 +91,7 @@ fix_boost_libs_in_libs @executable_path/../Frameworks/boost_libs Lethean.app/Con
 #rm -rf @executable_path/../Frameworks/boost_libs/*mt.dylib
 
 
-"$ZANO_QT_PATH/bin/macdeployqt" Lethean.app -qmldir="$curr_path/src/gui"
+"$ZANO_QT_PATH/bin/macdeployqt" Lethean.app
 if [ $? -ne 0 ]; then
     echo "Failed to macdeployqt Lethean.app"
     exit 1
@@ -111,7 +111,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-codesign -s "Developer ID Application: Lethean LTD (W2DNA5L5DY)" --options runtime -f --entitlements "$curr_path/utils/macos_entitlements.plist" --deep ./Lethean.app
+codesign -s "Developer ID Application: Lethean LTD (W2DNA5L5DY)" --timestamp --options runtime -f --entitlements "$curr_path/utils/macos_entitlements.plist" --deep ./Lethean.app
 if [ $? -ne 0 ]; then
     echo "Failed to sign Lethean.app"
     exit 1
