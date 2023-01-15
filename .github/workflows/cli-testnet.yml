@@ -101,8 +101,8 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: C:\Users\runneradmin\.ccache
-          key: ccache-${{ runner.os }}-build-${{ github.sha }}
-          restore-keys: ccache-${{ runner.os }}-build-
+          key: ccache-${{ runner.os }}-build-testnet-cli-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-build-testnet-cli-
       - name: Cache Chocolatey Dependencies
         uses: actions/cache@v3
         with:
