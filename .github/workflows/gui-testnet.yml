@@ -45,6 +45,8 @@ jobs:
           export ZANO_QT_PATH=/opt/homebrew/Cellar/qt@5/5.15.7_1
           export ZANO_BOOST_ROOT="/opt/homebrew/opt/boost"
           export ZANO_BOOST_LIBS_PATH="/opt/homebrew/opt/boost/lib"
+          export ZANO_BUILD_DIR="build"
+          export CMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk"
           make macos-gui -j3
       - name: Tar files
         run: cd build/release/src/gui && tar -cvf ../../../../testnet-desktop-macos-amd64.tar Lethean.app
