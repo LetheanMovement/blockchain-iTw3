@@ -17,11 +17,11 @@ if [ -n "$build_prefix" ]; then
   build_prefix_label="$build_prefix "
 fi
 
-#if [ "$testnet" == true ]; then
+if [ "$testnet" == true ]; then
   testnet_def="-D TESTNET=TRUE"
   testnet_label="testnet "
   ARCHIVE_NAME_PREFIX=${ARCHIVE_NAME_PREFIX}testnet-
-#fi
+fi
 
 ######### DEBUG ##########
 #cd "$ZANO_BUILD_DIR/release/src"
@@ -70,11 +70,11 @@ if [ $? -ne 0 ]; then
 fi
 
 # rename process name to big letter
-mv Lethean.app/Contents/MacOS/lethean Lethean.app/Contents/MacOS/Lethean
-if [ $? -ne 0 ]; then
-    echo "Failed to rename process"
-    exit 1
-fi
+#mv Lethean.app/Contents/MacOS/lethean Lethean.app/Contents/MacOS/Lethean
+#if [ $? -ne 0 ]; then
+#    echo "Failed to rename process"
+#    exit 1
+#fi
 
 cp letheand simplewallet Lethean.app/Contents/MacOS/
 if [ $? -ne 0 ]; then
