@@ -1,6 +1,6 @@
 set -x # echo on
 set +e # switch off exit on error
-curr_path=${BASH_SOURCE%/*}
+curr_path=$(pwd)
 
 # check that all the required environment vars are set
 : "${ZANO_QT_PATH:?variable not set, see also macosx_build_config.command}"
@@ -31,7 +31,7 @@ fi
 
 rm -rf $ZANO_BUILD_DIR; mkdir -p "$ZANO_BUILD_DIR/release"; cd "$ZANO_BUILD_DIR/release"
 
-cmake $testnet_def -D OPENSSL_ROOT_DIR=$OPENSSL_ROOT_DIR -D CMAKE_OSX_SYSROOT=$CMAKE_OSX_SYSROOT -D BUILD_GUI=TRUE -D CMAKE_PREFIX_PATH="$ZANO_QT_PATH/clang_64" -D CMAKE_BUILD_TYPE=Release -D BOOST_ROOT="$ZANO_BOOST_ROOT" -D BOOST_LIBRARYDIR="$ZANO_BOOST_LIBS_PATH" ../..
+cmake $testnet_def -D OPENSSL_ROOT_DIR=$OPENSSL_ROOT_DIR -D CMAKE_OSX_SYSROOT=$CMAKE_OSX_SYSROOT -D BUILD_GUI=TRUE -D CMAKE_PREFIX_PATH="$ZANO_QT_PATH" -D CMAKE_BUILD_TYPE=Release -D BOOST_ROOT="$ZANO_BOOST_ROOT" -D BOOST_LIBRARYDIR="$ZANO_BOOST_LIBS_PATH" ../..
 if [ $? -ne 0 ]; then
     echo "Failed to cmake"
     exit 1
@@ -61,17 +61,20 @@ fi
 # copy all necessary libs into the bundle in order to workaround El Capitan's SIP restrictions
 mkdir -p Lethean.app/Contents/Frameworks/boost_libs
 cp -R "$ZANO_BOOST_LIBS_PATH/" Lethean.app/Contents/Frameworks/boost_libs/
+rm -rf Lethean.app/Contents/Frameworks/boost_libs/cmake/
+#rm -rf Lethean.app/Contents/Frameworks/boost_libs/*.a
+chmod -R 0644 Lethean.app/Contents/Frameworks/boost_libs/*
 if [ $? -ne 0 ]; then
     echo "Failed to cp workaround to MacOS"
     exit 1
 fi
 
-# rename process name to big letter 
-mv Lethean.app/Contents/MacOS/lethean Lethean.app/Contents/MacOS/Lethean
-if [ $? -ne 0 ]; then
-    echo "Failed to rename process"
-    exit 1
-fi
+# rename process name to big letter
+#mv Lethean.app/Contents/MacOS/lethean Lethean.app/Contents/MacOS/Lethean
+#if [ $? -ne 0 ]; then
+#    echo "Failed to rename process"
+#    exit 1
+#fi
 
 cp letheand simplewallet Lethean.app/Contents/MacOS/
 if [ $? -ne 0 ]; then
@@ -85,10 +88,10 @@ fix_boost_libs_in_binary @executable_path/../Frameworks/boost_libs Lethean.app/C
 fix_boost_libs_in_binary @executable_path/../Frameworks/boost_libs Lethean.app/Contents/MacOS/simplewallet
 fix_boost_libs_in_binary @executable_path/../Frameworks/boost_libs Lethean.app/Contents/MacOS/letheand
 fix_boost_libs_in_libs @executable_path/../Frameworks/boost_libs Lethean.app/Contents/Frameworks/boost_libs
+#rm -rf @executable_path/../Frameworks/boost_libs/*mt.dylib
 
 
-
-"$ZANO_QT_PATH/clang_64/bin/macdeployqt" Lethean.app
+"$ZANO_QT_PATH/bin/macdeployqt" Lethean.app
 if [ $? -ne 0 ]; then
     echo "Failed to macdeployqt Lethean.app"
     exit 1
@@ -108,12 +111,12 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-codesign -s "Developer ID Application: Lethean Limited" --timestamp --options runtime -f --entitlements ../../../utils/macos_entitlements.plist --deep ./Lethean.app
+codesign -s "Developer ID Application: Lethean LTD (W2DNA5L5DY)" --timestamp --options runtime -f --entitlements "$curr_path/utils/macos_entitlements.plist" --deep ./Lethean.app
 if [ $? -ne 0 ]; then
     echo "Failed to sign Lethean.app"
     exit 1
 fi
-
+ exit 0
 
 read version_str <<< $(DYLD_LIBRARY_PATH=$ZANO_BOOST_LIBS_PATH ./connectivity_tool --version | awk '/^Lethean/ { print $2 }')
 version_str=${version_str}
@@ -205,14 +208,14 @@ success=0
 for i in {1..10}; do
     xcrun altool --notarization-info $GUID -u "hello@lt.hn" -p "@keychain:Developer-altool" > $tmpfile 2>&1
     NOTARIZE_OUTPUT=$( cat $tmpfile )
-    rm $tmpfile 
+    rm $tmpfile
     NOTARIZATION_LOG_URL=$(echo "$NOTARIZE_OUTPUT" | sed -n "s/.*LogFileURL\: \([[:graph:]]*\).*/\1/p")
     if [ ${#NOTARIZATION_LOG_URL} -ge 30 ]; then
         success=1
         curl -L $NOTARIZATION_LOG_URL
         break
     fi
-    sleep 60 
+    sleep 60
 done
 
 if [ $success -ne 1 ]; then
