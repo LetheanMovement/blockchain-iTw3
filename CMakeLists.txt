@@ -1,7 +1,16 @@
 cmake_minimum_required(VERSION 2.8.6)
 
 list(INSERT CMAKE_MODULE_PATH 0
-        "${CMAKE_CURRENT_SOURCE_DIR}/contrib/cmake")
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+include(HunterGate)
+set(HUNTER_CONFIGURATION_TYPES Release CACHE STRING "Build type of Hunter packages")
+set(HUNTER_JOBS_NUMBER 6 CACHE STRING "Number of parallel builds used by Hunter")
+HunterGate(
+        URL "https://github.com/cpp-pm/hunter/archive/v0.24.15.tar.gz"
+        SHA1 "8010d63d5ae611c564889d5fe12d3cb7a45703ac"
+        LOCAL
+)
 
 PROJECT(Lethean)
 
@@ -43,7 +52,8 @@ set(VERSION "1.0")
 #    cmake_policy(SET CMP0020 OLD)
 #  endif()
 
-include(ConfigOpenSSL)
+hunter_add_package(OpenSSL)
+find_package(OpenSSL REQUIRED)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS" OR CMAKE_SYSTEM_NAME STREQUAL "Android")
   add_definitions(-DMOBILE_WALLET_BUILD)
@@ -220,6 +230,8 @@ else()
   endif()
 endif()
 
+hunter_add_package(ICU)
+find_package(ICU CONFIG REQUIRED)
 
 if(MSVC)
   set(Boost_USE_STATIC_LIBS ON)
@@ -244,10 +256,9 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Android")
   set(Boost_LIBRARY_DIRS "${Boost_LIBRARY_DIRS}/${CMAKE_ANDROID_ARCH_ABI}/")
   set(Boost_LIBRARIES "${Boost_LIBRARY_DIRS}libboost_system.a;${Boost_LIBRARY_DIRS}libboost_filesystem.a;${Boost_LIBRARY_DIRS}libboost_thread.a;${Boost_LIBRARY_DIRS}libboost_timer.a;${Boost_LIBRARY_DIRS}libboost_date_time.a;${Boost_LIBRARY_DIRS}libboost_chrono.a;${Boost_LIBRARY_DIRS}libboost_regex.a;${Boost_LIBRARY_DIRS}libboost_serialization.a;${Boost_LIBRARY_DIRS}libboost_atomic.a;${Boost_LIBRARY_DIRS}libboost_program_options.a")
 else()
+  hunter_add_package(Boost COMPONENTS system filesystem thread timer date_time chrono regex serialization atomic program_options locale log)
   find_package(Boost 1.70 REQUIRED COMPONENTS system filesystem thread timer date_time chrono regex serialization atomic program_options locale)
 endif()
-
-
 
 message(STATUS "Boost: ${Boost_VERSION} from ${Boost_LIBRARY_DIRS}")
 
