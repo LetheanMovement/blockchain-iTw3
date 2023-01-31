@@ -37,7 +37,7 @@ jobs:
       - name: update apt
         run: sudo apt update & sudo apt-get upgrade -y
       - name: install dependencies
-        run: sudo apt-get install -y python-dev autotools-dev libboost-all-dev libicu-dev libbz2-dev git screen checkinstall zlib1g-dev ccache miniupnpc
+        run: sudo apt-get install -y python-dev autotools-dev libbz2-dev git screen checkinstall zlib1g-dev ccache miniupnpc
       - name: build server
         run: |
           ${{env.CCACHE_SETTINGS}}
