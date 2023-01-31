@@ -99,7 +99,11 @@ clean:
 macos-gui:
 	bash ./utils/build_script_mac_osx.sh
 
+linux-cli-testnet:
+	bash ./utils/build/testnet_linux_cli.sh
+
 tags:
 	ctags -R --sort=1 --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++ src contrib tests/gtest
 
 .PHONY: all release debug static static-release gui gui-release gui-static gui-release-static gui-debug test test-release test-debug clean tags  macos-gui
+.PHONY: linux-cli-testnet
