@@ -31,6 +31,11 @@ jobs:
           submodules: recursive
       - uses: actions/cache@v3
         with:
+          path: ~/.hunter
+          key: hunter-${{ runner.os }}
+          restore-keys: hunter-${{ runner.os }}
+      - uses: actions/cache@v3
+        with:
           path: ~/.ccache
           key: ccache-${{ runner.os }}-build-testnet-cli-${{ github.sha }}
           restore-keys: ccache-${{ runner.os }}-build-testnet-cli-
@@ -42,8 +47,6 @@ jobs:
         run: |
           ${{env.CCACHE_SETTINGS}}
           ./utils/build/testnet_linux_cli.sh
-      - name: Move Tarball
-        run: cd build/release && mv lethean-linux-cli-*.tar.bz2 ../../
       - uses: actions/upload-artifact@v3
         with:
           name: lethean-linux-cli
