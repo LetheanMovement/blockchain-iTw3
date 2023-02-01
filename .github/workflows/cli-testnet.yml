@@ -91,7 +91,8 @@ jobs:
         with:
           python-version: '3.9'
           cache: 'pip' # caching pip dependencies
-      - run: pip install requests gitpython
+      - run: pip3 install requests gitpython
+      - run: pip install -r requirements.txt
       - name: install dependencies
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install ccache miniupnpc
       - name: build server
