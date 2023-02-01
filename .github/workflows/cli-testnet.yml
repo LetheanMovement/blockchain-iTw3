@@ -11,6 +11,7 @@ on:
       - '**.md'
 
 env:
+  HUNTER_CACHE_TOKEN: ${{ secrets.HUNTER_CACHE_TOKEN }}
   CCACHE_SETTINGS: |
     ccache --max-size=150M
     ccache --set-config=compression=true
