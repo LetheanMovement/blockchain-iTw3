@@ -30,12 +30,14 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      - uses: actions/cache@v3
+      - name: Process Hunter Cache
+        uses: actions/cache@v3
         with:
           path: /home/runner/.hunter
           key: hunter-${{ runner.os }}
           restore-keys: hunter-${{ runner.os }}
-      - uses: actions/cache@v3
+      - name: Process Ccache
+        uses: actions/cache@v3
         with:
           path: ~/.ccache
           key: ccache-${{ runner.os }}-build-testnet-cli
@@ -85,6 +87,11 @@ jobs:
           path: /Users/runner/Library/Caches/ccache
           key: ccache-${{ runner.os }}-build-testnet-cli
           restore-keys: ccache-${{ runner.os }}-build-testnet-cli
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip' # caching pip dependencies
+      - run: pip install requests gitpython
       - name: install dependencies
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install ccache miniupnpc
       - name: build server
