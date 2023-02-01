@@ -2,10 +2,10 @@ set -x # echo on
 set +e # switch off exit on error
 curr_path=$(pwd)
 
-ARCHIVE_NAME_PREFIX=lethean-macos-cli-x64-testnet-
+ARCHIVE_NAME_PREFIX=lethean-macos-cli-$(arch)-testnet-
 
 rm -rf build; mkdir -p build/release;
-cmake -H. -Bbuild/release -DCMAKE_BUILD_TYPE=Release -DTESTNET=true -DSTATIC=true
+cmake -H. -Bbuild/release -DCMAKE_BUILD_TYPE=Release -DHUNTER_CONFIGURATION_TYPES=Release -DTESTNET=true -DSTATIC=true
 
 if [ $? -ne 0 ]; then
     echo "Failed to cmake"
