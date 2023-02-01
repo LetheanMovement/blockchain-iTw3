@@ -31,16 +31,16 @@ jobs:
           submodules: recursive
       - uses: actions/cache@v3
         with:
-          path: ~/.hunter
+          path: /home/runner/.hunter
           key: hunter-${{ runner.os }}
           restore-keys: hunter-${{ runner.os }}
       - uses: actions/cache@v3
         with:
           path: ~/.ccache
-          key: ccache-${{ runner.os }}-build-testnet-cli-${{ github.sha }}
-          restore-keys: ccache-${{ runner.os }}-build-testnet-cli-
+          key: ccache-${{ runner.os }}-build-testnet-cli
+          restore-keys: ccache-${{ runner.os }}-build-testnet-cli
       - name: update apt
-        run: sudo apt update & sudo apt-get upgrade -y
+        run: sudo apt update
       - name: install dependencies
         run: sudo apt-get install -y python-dev autotools-dev libbz2-dev git screen checkinstall zlib1g-dev ccache miniupnpc
       - name: build server
@@ -73,7 +73,7 @@ jobs:
       - name: Process Hunter Cache
         uses: actions/cache@v3
         with:
-          path: ~/.hunter
+          path: /Users/runner/.hunter
           key: hunter-${{ runner.os }}
           restore-keys: hunter-${{ runner.os }}
       - name: Process ccache
