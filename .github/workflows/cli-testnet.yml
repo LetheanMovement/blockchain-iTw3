@@ -131,7 +131,8 @@ jobs:
         shell: cmd
         run: |
           cd "C:/hostedtoolcache/windows/Python/3.11.1/x86/"
-          C:/hostedtoolcache/windows/Python/3.11.1/x86/pip.exe install requests gitpython
+          ls .
+          C:/hostedtoolcache/windows/Python/3.11.1/x86/pip3.11.exe install requests gitpython
       - name: build server
         env:
           QT_PREFIX_PATH: C:\ProgramData\chocolatey\lib\Qt5.11.2\5.11.2
