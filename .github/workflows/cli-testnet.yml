@@ -127,6 +127,10 @@ jobs:
         run: |
           choco install ccache -y
           choco install zip -y
+      - name: hacky python fix
+        run: |
+          cd "C:/hostedtoolcache/windows/Python/3.11.1/x86/"
+          ./pip3.exe install requests gitpython
       - name: build server
         env:
           QT_PREFIX_PATH: C:\ProgramData\chocolatey\lib\Qt5.11.2\5.11.2
