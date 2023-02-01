@@ -131,7 +131,7 @@ jobs:
         shell: cmd
         run: |
           cd "C:/hostedtoolcache/windows/Python/3.11.1/x86/"
-          ls .
+          ls "C:/hostedtoolcache/windows/Python/3.11.1/x86/"
           C:/hostedtoolcache/windows/Python/3.11.1/x86/pip3.11.exe install requests gitpython
       - name: build server
         env:
