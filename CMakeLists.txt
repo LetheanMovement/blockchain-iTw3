@@ -4,6 +4,7 @@ list(INSERT CMAKE_MODULE_PATH 0
         "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(HunterGate)
+include(Hunter/HunterCacheServers)
 set(HUNTER_CONFIGURATION_TYPES Release CACHE STRING "Build type of Hunter packages")
 set(HUNTER_JOBS_NUMBER 6 CACHE STRING "Number of parallel builds used by Hunter")
 HunterGate(
