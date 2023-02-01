@@ -132,7 +132,7 @@ jobs:
           QT_PREFIX_PATH: C:\ProgramData\chocolatey\lib\Qt5.11.2\5.11.2
         run: |
           ${{env.CCACHE_SETTINGS}}
-          ./utils/build/testnet_windows_cli.sh
+          make windows-cli-testnet
       - uses: actions/upload-artifact@v3
         with:
           name: lethean-windows-cli
