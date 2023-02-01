@@ -90,7 +90,7 @@ jobs:
       - name: hacky python fix
         run: |
           cd /usr/local/Frameworks/Python.framework/Versions/3.11/bin/
-          pip3 install requests gitpython
+          ./pip3 install requests gitpython
       - name: install dependencies
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install ccache miniupnpc
       - name: build server
