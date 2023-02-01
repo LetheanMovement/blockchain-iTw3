@@ -72,22 +72,29 @@ endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# build types
-if (UNIX AND NOT APPLE)
-  # single configurations, defaults to Release
-  if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release")
-  endif()
-else()
-  # multi configurations for MSVC and XCode
-  if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
-    set(CMAKE_CONFIGURATION_TYPES "Release")
-  elseif(CMAKE_SYSTEM_NAME STREQUAL "Android")
-    set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
-  else()
-    set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
-  endif()
+
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
 endif()
+if (NOT CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
+endif()
+# build types
+#if (UNIX AND NOT APPLE)
+#  # single configurations, defaults to Release
+#  if (NOT CMAKE_BUILD_TYPE)
+#    set(CMAKE_BUILD_TYPE "Release")
+#  endif()
+#else()
+#  # multi configurations for MSVC and XCode
+#  if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+#    set(CMAKE_CONFIGURATION_TYPES "Release")
+#  elseif(CMAKE_SYSTEM_NAME STREQUAL "Android")
+#    set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
+#  else()
+#    set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
+#  endif()
+#endif()
 message("Generated with config types: ${CMAKE_CONFIGURATION_TYPES}, and built type: ${CMAKE_BUILD_TYPE}")
 
 enable_testing()
@@ -257,7 +264,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Android")
   set(Boost_LIBRARIES "${Boost_LIBRARY_DIRS}libboost_system.a;${Boost_LIBRARY_DIRS}libboost_filesystem.a;${Boost_LIBRARY_DIRS}libboost_thread.a;${Boost_LIBRARY_DIRS}libboost_timer.a;${Boost_LIBRARY_DIRS}libboost_date_time.a;${Boost_LIBRARY_DIRS}libboost_chrono.a;${Boost_LIBRARY_DIRS}libboost_regex.a;${Boost_LIBRARY_DIRS}libboost_serialization.a;${Boost_LIBRARY_DIRS}libboost_atomic.a;${Boost_LIBRARY_DIRS}libboost_program_options.a")
 else()
   hunter_add_package(Boost COMPONENTS system filesystem thread timer date_time chrono regex serialization atomic program_options locale log)
-  find_package(Boost 1.70 REQUIRED COMPONENTS system filesystem thread timer date_time chrono regex serialization atomic program_options locale)
+  find_package(Boost 1.80 CONFIG REQUIRED COMPONENTS system filesystem thread timer date_time chrono regex serialization atomic program_options locale)
 endif()
 
 message(STATUS "Boost: ${Boost_VERSION} from ${Boost_LIBRARY_DIRS}")
