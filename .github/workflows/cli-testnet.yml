@@ -70,26 +70,24 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      - uses: actions/cache@v3
+      - name: Process Hunter Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.hunter
+          key: hunter-${{ runner.os }}
+          restore-keys: hunter-${{ runner.os }}
+      - name: Process ccache
+        uses: actions/cache@v3
         with:
           path: /Users/runner/Library/Caches/ccache
           key: ccache-${{ runner.os }}-build-testnet-cli
           restore-keys: ccache-${{ runner.os }}-build-testnet-cli
       - name: install dependencies
-        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install openssl boost icu4c ccache miniupnpc
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install ccache miniupnpc
       - name: build server
-        env:
-          PKG_CONFIG_PATH: "/usr/local/opt/openssl@3/lib/pkgconfig"
-          OPENSSL_ROOT_DIR: "/usr/local/opt/openssl@3"
-          ZANO_BOOST_ROOT: "/opt/homebrew/opt/boost"
-          ZANO_BOOST_LIBS_PATH: "/opt/homebrew/opt/boost/lib"
-          CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk"
         run: |
           ${{env.CCACHE_SETTINGS}}
-          export LIBRARY_PATH=${LIBRARY_PATH}:/usr/local/opt/icu4c/lib
           ./utils/build/testnet_mac_osx_cli.sh
-      - name: Move Tarball
-        run: cd build/release && mv lethean-macos-cli-*.tar.bz2 ../../
       - uses: actions/upload-artifact@v3
         with:
           name: lethean-macos-cli
