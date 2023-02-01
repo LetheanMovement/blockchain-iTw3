@@ -96,13 +96,16 @@ test-debug:
 clean:
 	rm -rf build
 
-macos-gui:
-	bash ./utils/build_script_mac_osx.sh
+macos-gui-testnet:
+	bash ./utils/build/testnet_mac_osx_gui.sh
 
-macos-cli-testnet:  ## Build Macos CLI packaged archive
+linux-gui-testnet: ## Build Linux GUI packaged archive
+	bash ./utils/build/testnet_linux_gui.sh
+
+macos-cli-testnet: ## Build Macos CLI packaged archive
 	bash ./utils/build/testnet_mac_osx_cli.sh
 
-linux-cli-testnet:  ## Build Linux CLI packaged archive
+linux-cli-testnet: ## Build Linux CLI packaged archive
 	bash ./utils/build/testnet_linux_cli.sh
 
 
@@ -114,4 +117,4 @@ tags:
 	ctags -R --sort=1 --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++ src contrib tests/gtest
 
 .PHONY: all release debug static static-release gui gui-release gui-static gui-release-static gui-debug test test-release test-debug clean tags  macos-gui
-.PHONY: linux-cli-testnet macos-cli-testnet help
+.PHONY: linux-cli-testnet macos-cli-testnet macos-gui-testnet linux-gui-testnet help
