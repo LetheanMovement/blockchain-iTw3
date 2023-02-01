@@ -34,7 +34,6 @@ mkdir build
 @echo "---------------- BUILDING APPLICATIONS ------------------------"
 @echo "---------------------------------------------------------------"
 
-cd %SOURCES_PATH%\build
 cmake -H. -Bbuild/release -D CMAKE_BUILD_TYPE=Release -D STATIC=ON -D TESTNET=ON -G "Visual Studio 17 2022"
 IF %ERRORLEVEL% NEQ 0 (
   goto error
