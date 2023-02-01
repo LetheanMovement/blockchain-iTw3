@@ -108,6 +108,9 @@ macos-cli-testnet: ## Build Macos CLI packaged archive
 linux-cli-testnet: ## Build Linux CLI packaged archive
 	bash ./utils/build/testnet_linux_cli.sh
 
+windows-cli-testnet: ## Build Windows CLI packaged archive
+	./utils/build/testnet_windows_cli.sh
+
 
 help: ## Show this help
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m make %-30s\033[0m %s\n", $$1, $$2}'
@@ -117,4 +120,4 @@ tags:
 	ctags -R --sort=1 --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++ src contrib tests/gtest
 
 .PHONY: all release debug static static-release gui gui-release gui-static gui-release-static gui-debug test test-release test-debug clean tags  macos-gui
-.PHONY: linux-cli-testnet macos-cli-testnet macos-gui-testnet linux-gui-testnet help
+.PHONY: linux-cli-testnet macos-cli-testnet macos-gui-testnet linux-gui-testnet windows-cli-testnet help
