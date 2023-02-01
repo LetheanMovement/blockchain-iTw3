@@ -129,10 +129,10 @@ jobs:
           choco install zip -y
       - name: hacky python fix
         shell: cmd
+        working-directory: C:/hostedtoolcache/windows/Python/3.11.1/x86/
         run: |
-          cd "C:/hostedtoolcache/windows/Python/3.11.1/x86/"
           curl https://bootstrap.pypa.io/get-pip.py -o C:/hostedtoolcache/windows/Python/3.11.1/x86/get-pip.py
-          C:/hostedtoolcache/windows/Python/3.11.1/x86/python get-pip.py
+          C:/hostedtoolcache/windows/Python/3.11.1/x86/python C:/hostedtoolcache/windows/Python/3.11.1/x86/get-pip.py
           C:/hostedtoolcache/windows/Python/3.11.1/x86/pip.exe install requests gitpython
       - name: build server
         env:
