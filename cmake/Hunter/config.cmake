@@ -1,1 +1,1 @@
-hunter_config(Boost VERSION 1.80.0)
+hunter_config(Boost VERSION 1.81.0 CMAKE_ARGS USE_CONFIG_FROM_BOOST=ON)
