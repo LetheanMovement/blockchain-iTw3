@@ -30,16 +30,16 @@ set BOOST_LIBRARYDIR=%LOCAL_BOOST_LIB_PATH%
 cd %SOURCES_PATH%
 rmdir build /s /q
 mkdir build
-
+set HUNTER_ROOT=%HOMEPATH%\.hunter
 @echo "---------------- BUILDING APPLICATIONS ------------------------"
 @echo "---------------------------------------------------------------"
 
-cmake -H. -Bbuild/release -DHUNTER_STATUS_DEBUG=ON -D CMAKE_BUILD_TYPE=Release -D STATIC=ON -D TESTNET=ON -G "Visual Studio 17 2022"
+cmake -H. -Bbuild/release -DHUNTER_STATUS_DEBUG=OFF -D CMAKE_BUILD_TYPE=Release -D STATIC=ON -D TESTNET=ON -G "Visual Studio 17 2022"
 IF %ERRORLEVEL% NEQ 0 (
   goto error
 )
 
-cmake --build build/release -- -j10
+cmake --build build/release --
 
 IF %ERRORLEVEL% NEQ 0 (
   goto error
