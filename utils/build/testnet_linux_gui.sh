@@ -11,7 +11,7 @@
 # export QT_PREFIX_PATH=/home/user/Qt5.10.1/5.10.1/gcc_64
 # export OPENSSL_ROOT_DIR=/home/user/openssl
 
-ARCHIVE_NAME_PREFIX=lethean-linux-x64-
+ARCHIVE_NAME_PREFIX=lethean-linux-gui-x64-
 
 : "${BOOST_ROOT:?BOOST_ROOT should be set to the root of Boost, ex.: /home/user/boost_1_66_0}"
 : "${QT_PREFIX_PATH:?QT_PREFIX_PATH should be set to Qt libs folder, ex.: /home/user/Qt5.10.1/5.10.1/gcc_64}"
@@ -22,11 +22,11 @@ if [ -n "$build_prefix" ]; then
   build_prefix_label="$build_prefix "
 fi
 
-if [ "$testnet" == true ]; then
+
   testnet_def="-D TESTNET=TRUE"
   testnet_label="testnet "
   ARCHIVE_NAME_PREFIX=${ARCHIVE_NAME_PREFIX}testnet-
-fi
+
 
 if [ "$testnet" == true ] || [ -n "$qt_dev_tools" ]; then
   copy_qt_dev_tools=true
@@ -114,7 +114,7 @@ cp -Rv src/letheand src/Lethean src/simplewallet  src/connectivity_tool ./Lethea
 package_filename=${ARCHIVE_NAME_PREFIX}${version_str}.tar.bz2
 
 rm -f ./$package_filename
-tar -cjvf $package_filename Lethean
+tar -cjvf ../../$package_filename Lethean
 if [ $? -ne 0 ]; then
     echo "Failed to pack"
     exit 1

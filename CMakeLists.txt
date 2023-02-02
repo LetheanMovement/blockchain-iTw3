@@ -1,7 +1,17 @@
 cmake_minimum_required(VERSION 2.8.6)
 
 list(INSERT CMAKE_MODULE_PATH 0
-        "${CMAKE_CURRENT_SOURCE_DIR}/contrib/cmake")
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+include(HunterGate)
+include(Hunter/HunterCacheServers)
+set(HUNTER_CONFIGURATION_TYPES Release CACHE STRING "Build type of Hunter packages")
+set(HUNTER_JOBS_NUMBER 6 CACHE STRING "Number of parallel builds used by Hunter")
+HunterGate(
+        URL "https://github.com/cpp-pm/hunter/archive/v0.24.15.tar.gz"
+        SHA1 "8010d63d5ae611c564889d5fe12d3cb7a45703ac"
+        LOCAL
+)
 
 PROJECT(Lethean)
 
@@ -43,7 +53,8 @@ set(VERSION "1.0")
 #    cmake_policy(SET CMP0020 OLD)
 #  endif()
 
-include(ConfigOpenSSL)
+hunter_add_package(OpenSSL)
+find_package(OpenSSL REQUIRED)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS" OR CMAKE_SYSTEM_NAME STREQUAL "Android")
   add_definitions(-DMOBILE_WALLET_BUILD)
@@ -62,22 +73,29 @@ endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# build types
-if (UNIX AND NOT APPLE)
-  # single configurations, defaults to Release
-  if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release")
-  endif()
-else()
-  # multi configurations for MSVC and XCode
-  if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
-    set(CMAKE_CONFIGURATION_TYPES "Release")
-  elseif(CMAKE_SYSTEM_NAME STREQUAL "Android")
-    set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
-  else()
-    set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
-  endif()
+
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
 endif()
+if (NOT CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
+endif()
+# build types
+#if (UNIX AND NOT APPLE)
+#  # single configurations, defaults to Release
+#  if (NOT CMAKE_BUILD_TYPE)
+#    set(CMAKE_BUILD_TYPE "Release")
+#  endif()
+#else()
+#  # multi configurations for MSVC and XCode
+#  if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+#    set(CMAKE_CONFIGURATION_TYPES "Release")
+#  elseif(CMAKE_SYSTEM_NAME STREQUAL "Android")
+#    set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
+#  else()
+#    set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
+#  endif()
+#endif()
 message("Generated with config types: ${CMAKE_CONFIGURATION_TYPES}, and built type: ${CMAKE_BUILD_TYPE}")
 
 enable_testing()
@@ -220,6 +238,8 @@ else()
   endif()
 endif()
 
+hunter_add_package(ICU)
+find_package(ICU CONFIG REQUIRED)
 
 if(MSVC)
   set(Boost_USE_STATIC_LIBS ON)
@@ -244,10 +264,9 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Android")
   set(Boost_LIBRARY_DIRS "${Boost_LIBRARY_DIRS}/${CMAKE_ANDROID_ARCH_ABI}/")
   set(Boost_LIBRARIES "${Boost_LIBRARY_DIRS}libboost_system.a;${Boost_LIBRARY_DIRS}libboost_filesystem.a;${Boost_LIBRARY_DIRS}libboost_thread.a;${Boost_LIBRARY_DIRS}libboost_timer.a;${Boost_LIBRARY_DIRS}libboost_date_time.a;${Boost_LIBRARY_DIRS}libboost_chrono.a;${Boost_LIBRARY_DIRS}libboost_regex.a;${Boost_LIBRARY_DIRS}libboost_serialization.a;${Boost_LIBRARY_DIRS}libboost_atomic.a;${Boost_LIBRARY_DIRS}libboost_program_options.a")
 else()
-  find_package(Boost 1.70 REQUIRED COMPONENTS system filesystem thread timer date_time chrono regex serialization atomic program_options locale)
+  hunter_add_package(Boost COMPONENTS system filesystem thread timer date_time chrono regex serialization atomic program_options locale log)
+  find_package(Boost 1.80 CONFIG REQUIRED COMPONENTS system filesystem thread timer date_time chrono regex serialization atomic program_options locale)
 endif()
-
-
 
 message(STATUS "Boost: ${Boost_VERSION} from ${Boost_LIBRARY_DIRS}")
 

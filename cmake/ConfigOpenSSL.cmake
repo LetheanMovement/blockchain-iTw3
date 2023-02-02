@@ -7,7 +7,7 @@ if (APPLE AND NOT IOS)
         message(STATUS "Using OpenSSL found at ${OPENSSL_ROOT_DIR}")
     endif()
 endif()
-
+hunter_add_package(OpenSSL)
 find_package(OpenSSL REQUIRED)
 message(STATUS "Using OpenSSL include dir at ${OPENSSL_INCLUDE_DIR}")
 include_directories(${OPENSSL_INCLUDE_DIR})

@@ -1,2 +1,10 @@
 build
 .idea
+poolstate_lmdb_v1
+blockchain_lmdb_v1
+lethean-*
+lock.lck
+market.bin
+miner_conf.json
+p2pstate.bin
+profile_details.log

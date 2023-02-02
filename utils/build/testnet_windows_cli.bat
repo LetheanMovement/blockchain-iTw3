@@ -27,39 +27,19 @@ set BOOST_LIBRARYDIR=%LOCAL_BOOST_LIB_PATH%
 @echo "---------------- PREPARING BINARIES ---------------------------"
 @echo "---------------------------------------------------------------"
 
-
-
 cd %SOURCES_PATH%
 rmdir build /s /q
 mkdir build
-
+set HUNTER_ROOT=%HOMEPATH%\.hunter
 @echo "---------------- BUILDING APPLICATIONS ------------------------"
 @echo "---------------------------------------------------------------"
 
-cd %SOURCES_PATH%\build
-"C:\\Program Files\CMake\bin\cmake.exe" %TESTNET_DEF% -D OPENSSL_ROOT_DIR="%OPENSSL_ROOT_DIR%" -D CMAKE_PREFIX_PATH="%QT_MSVC_PATH%" -D BOOST_ROOT="%BOOST_ROOT%" -D BOOST_LIBRARYDIR="%LOCAL_BOOST_LIB_PATH%" -D BUILD_GUI=false -D STATIC=FALSE -G "Visual Studio 17 2022" -T host=x64 ..
+cmake -H. -Bbuild/release -DHUNTER_STATUS_DEBUG=OFF -D CMAKE_BUILD_TYPE=Release -D STATIC=ON -D TESTNET=ON -G "Visual Studio 17 2022"
 IF %ERRORLEVEL% NEQ 0 (
   goto error
 )
 
-call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" x86_amd64
-@echo on
-cd %SOURCES_PATH%\build
-
-msbuild version.vcxproj /p:SubSystem="CONSOLE,5.02"  /p:Configuration=Release /t:Build
-IF %ERRORLEVEL% NEQ 0 (
-  goto error
-)
-
-msbuild src/daemon.vcxproj /p:SubSystem="CONSOLE,5.02"  /p:Configuration=Release /t:Build
-IF %ERRORLEVEL% NEQ 0 (
-  goto error
-)
-
-msbuild src/simplewallet.vcxproj /p:SubSystem="CONSOLE,5.02"  /p:Configuration=Release /t:Build
-IF %ERRORLEVEL% NEQ 0 (
-  goto error
-)
+cmake --build build/release --
 
 IF %ERRORLEVEL% NEQ 0 (
   goto error
@@ -71,8 +51,9 @@ echo "sources are built successfully"
 :skip_build
 cd %SOURCES_PATH%/build
 
-set cmd=src\Release\simplewallet.exe --version
+set cmd=src\release\simplewallet.exe --version
 FOR /F "tokens=3" %%a IN ('%cmd%') DO set version=%%a
+echo '%version%'
 set version=%version:~0,-2%
 echo '%version%'
 

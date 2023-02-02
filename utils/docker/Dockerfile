@@ -42,15 +42,17 @@ ARG THREADS=2
 
 COPY . /project
 
-WORKDIR /project/build
+WORKDIR /project
 
-RUN cmake -D STATIC=true -D ARCH=x86-64 -D TESTNET=TRUE -D CMAKE_BUILD_TYPE=Release ..
+RUN rm -rf build; mkdir -p build/release;
 
-RUN make -j${THREADS} daemon simplewallet
+RUN cmake -H. -Bbuild/release -DCMAKE_BUILD_TYPE=Release -DHUNTER_CONFIGURATION_TYPES=Release -DTESTNET=true -DSTATIC=true
+
+RUN cmake --build build/release -- -j${THREADS}
 
 FROM scratch as export
-COPY --chmod=0777 --from=build /project/build/src/letheand /
-COPY --chmod=0777 --from=build /project/build/src/simplewallet /
+COPY --chmod=0777 --from=build /project/build/release/src/letheand /
+COPY --chmod=0777 --from=build /project/build/release/src/simplewallet /
 
 FROM ubuntu:20.04 as final
 

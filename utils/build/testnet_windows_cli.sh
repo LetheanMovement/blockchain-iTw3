@@ -11,7 +11,7 @@
 # export QT_PREFIX_PATH=/home/user/Qt5.10.1/5.10.1/gcc_64
 # export OPENSSL_ROOT_DIR=/home/user/openssl
 
-ARCHIVE_NAME_PREFIX=lethean-linux-cli-x64-testnet-
+ARCHIVE_NAME_PREFIX=lethean-windows-cli-x64-testnet-
 
 prj_root=$(pwd)
 
@@ -33,7 +33,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-read version_str <<< $(./build/release/src/letheand --version | awk '/^Lethean/ { print $2 }')
+read version_str <<< $(./build/release/src/letheand.exe --version | awk '/^Lethean/ { print $2 }')
 version_str=${version_str}
 echo $version_str
 
@@ -41,8 +41,8 @@ rm -rf build/Lethean;
 mkdir -p build/Lethean;
 
 
-cp -Rv LICENCE build/release/src/letheand build/release/src/simplewallet  build/release/src/connectivity_tool build/Lethean
-chmod 0777 build/Lethean/letheand build/Lethean/simplewallet  build/Lethean/connectivity_tool
+cp -Rv LICENCE build/release/src/letheand.exe build/release/src/simplewallet.exe  build/release/src/connectivity_tool build/Lethean.exe
+chmod 0777 build/Lethean/letheand.exe build/Lethean/simplewallet.exe  build/Lethean/connectivity_tool.exe
 
 package_filename=${ARCHIVE_NAME_PREFIX}${version_str}.tar.bz2
 

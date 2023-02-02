@@ -11,8 +11,8 @@ endif
 
 cmake = cmake $(cmake_gen)
 
-cmake_debug = $(cmake) -D CMAKE_BUILD_TYPE=Debug -D MUTE_ERRORS=FALSE
-cmake_release = $(cmake) -D CMAKE_BUILD_TYPE=Release
+cmake_debug = -D CMAKE_BUILD_TYPE=Debug -D MUTE_ERRORS=FALSE
+cmake_release = -D CMAKE_BUILD_TYPE=Release
 
 cmake_gui = -D BUILD_GUI=ON
 cmake_testnet = -D TESTNET=ON
@@ -28,7 +28,7 @@ build = build
 dir_debug = $(build)/debug
 dir_release = $(build)/release
 
-all: release
+all: help
 
 release:
 	$(eval command += $(cmake_release))
@@ -51,9 +51,9 @@ static-release:
 	$(eval command += $(cmake_release) $(cmake_static))
 	$(call CMAKE,$(dir_release),$(command)) && $(MAKE)
 
-static-release-testnet:
-	$(eval command += $(cmake_release) $(cmake_static) $(cmake_testnet))
-	$(call CMAKE,$(dir_release),$(command)) && $(MAKE)
+static-release-testnet:  ## Compile static CLI binaries
+	cmake -H. -B$(dir_release) $(cmake_release) $(cmake_static) $(cmake_testnet)
+	cmake --build $(dir_release) --
 
 #
 # GUI
@@ -96,10 +96,28 @@ test-debug:
 clean:
 	rm -rf build
 
-macos-gui:
-	bash ./utils/build_script_mac_osx.sh
+macos-gui-testnet:
+	bash ./utils/build/testnet_mac_osx_gui.sh
+
+linux-gui-testnet: ## Build Linux GUI packaged archive
+	bash ./utils/build/testnet_linux_gui.sh
+
+macos-cli-testnet: ## Build Macos CLI packaged archive
+	bash ./utils/build/testnet_mac_osx_cli.sh
+
+linux-cli-testnet: ## Build Linux CLI packaged archive
+	bash ./utils/build/testnet_linux_cli.sh
+
+windows-cli-testnet: ## Build Windows CLI packaged archive
+	./utils/build/testnet_windows_cli.sh
+
+
+help: ## Show this help
+	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m make %-30s\033[0m %s\n", $$1, $$2}'
+
 
 tags:
 	ctags -R --sort=1 --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++ src contrib tests/gtest
 
 .PHONY: all release debug static static-release gui gui-release gui-static gui-release-static gui-debug test test-release test-debug clean tags  macos-gui
+.PHONY: linux-cli-testnet macos-cli-testnet macos-gui-testnet linux-gui-testnet windows-cli-testnet help
