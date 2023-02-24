@@ -73,16 +73,16 @@ fi
 
 # fix boost libs paths in main executable and libs to workaround El Capitan's SIP restrictions
 
-source $(pwd)/../../../utils/build/extras/macos/fix_boost_libs_path.sh
+#source $(pwd)/../../../utils/build/extras/macos/fix_boost_libs_path.sh
+#
+#fix_boost_libs_in_binary @executable_path/../Frameworks/boost_libs Lethean.app/Contents/MacOS/Lethean
+#fix_boost_libs_in_binary @executable_path/../Frameworks/boost_libs Lethean.app/Contents/MacOS/simplewallet
+#fix_boost_libs_in_binary @executable_path/../Frameworks/boost_libs Lethean.app/Contents/MacOS/letheand
+#fix_boost_libs_in_libs @executable_path/../Frameworks/boost_libs Lethean.app/Contents/Frameworks/boost_libs
 
-fix_boost_libs_in_binary @executable_path/../Frameworks/boost_libs Lethean.app/Contents/MacOS/Lethean
-fix_boost_libs_in_binary @executable_path/../Frameworks/boost_libs Lethean.app/Contents/MacOS/simplewallet
-fix_boost_libs_in_binary @executable_path/../Frameworks/boost_libs Lethean.app/Contents/MacOS/letheand
-fix_boost_libs_in_libs @executable_path/../Frameworks/boost_libs Lethean.app/Contents/Frameworks/boost_libs
 
 
-
-"$ZANO_QT_PATH/bin/macdeployqt" Lethean.app
+"$ZANO_QT_PATH/bin/macdeployqt" lethean-gui-server.app -codesign="Developer ID Application: Lethean LTD (W2DNA5L5DY)"
 if [ $? -ne 0 ]; then
     echo "Failed to macdeployqt Lethean.app"
     exit 1

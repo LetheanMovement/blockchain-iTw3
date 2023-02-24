@@ -70,9 +70,9 @@ file(GLOB_RECURSE MINER miner/*)
 
 if(BUILD_GUI)
   if(APPLE)
-    file(GLOB_RECURSE QTSERVER gui/qt-server/*.cpp gui/qt-server/*.h gui/qt-server/*.mm)
+    file(GLOB_RECURSE QTSERVER gui/*.cpp gui/*.h gui/*.mm)
   else()
-    file(GLOB_RECURSE QTSERVER gui/qt-server/*.cpp gui/qt-server/*.h)
+    file(GLOB_RECURSE QTSERVER gui/*.cpp gui/*.h)
   endif()
 endif()
 
