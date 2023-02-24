@@ -19,7 +19,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-make -j Lethean
+make -j2 Lethean
 if [ $? -ne 0 ]; then
     echo "Failed to make Lethean"
     exit 1
