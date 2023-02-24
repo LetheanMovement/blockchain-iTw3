@@ -49,14 +49,14 @@ QT_END_NAMESPACE
 // };
 
 //
-class MainWindow : public QMainWindow,
+class MainWindow : public QObject,
                    public currency::i_core_event_handler,
                    public view::i_view,
                    public QAbstractNativeEventFilter
 {
   Q_OBJECT
 
-public:
+  public:
   MainWindow();
   ~MainWindow();
 
@@ -85,12 +85,9 @@ public:
   protected slots:
 
   void on_load_finished(bool ok);
-  bool    do_close();
 
 
   public slots:
-  QString show_openfile_dialog(const QString& param);
-  QString show_savefile_dialog(const QString& param);
   QString open_wallet(const QString& param);
   QString get_my_offers(const QString& param);
   QString get_fav_offers(const QString& param);
@@ -155,7 +152,6 @@ public:
   QString toggle_autostart(const QString& param);
   QString is_valid_restore_wallet_text(const QString& param);
   QString get_seed_phrase_info(const QString& param);
-  QString print_text(const QString& param);
   QString print_log(const QString& param);
   QString set_clipboard(const QString& param);
   QString set_localization_strings(const QString str);
@@ -175,15 +171,13 @@ public:
   QString check_available_sources(const QString& param);
   QString open_url_in_browser(const QString& param);
 
-  void    trayIconActivated(QSystemTrayIcon::ActivationReason reason);
   void    tray_quit_requested();
-  void    on_menu_show();
   QString is_remnotenode_mode_preconfigured();
   QString start_backend(const QString& params);
 
   QString async_call(const QString& func_name, const QString& params);
   QString sync_call(const QString& func_name, const QString& params);
-
+  QString get_wallet_info(const QString& param);
   //for test purposes onlys
   QString request_dummy();
 
@@ -212,7 +206,6 @@ private:
   //------- i_view ---------
   virtual bool update_daemon_status(const view::daemon_status_info& info);
   virtual bool on_backend_stopped();
-  virtual bool show_msg_box(const std::string& message);
   virtual bool update_wallet_status(const view::wallet_status_info& wsi);
   virtual bool update_wallets_info(const view::wallets_summary_info& wsi);
   virtual bool money_transfer(const view::transfer_event_info& tei);
@@ -228,8 +221,6 @@ private:
 
 
   void closeEvent(QCloseEvent *event);
-  void contextMenuEvent(QContextMenuEvent * event);
-  void changeEvent(QEvent *e);
   void on_maximized();
   bool handle_deeplink_params_in_commandline();
   //void setOrientation(Qt::ScreenOrientation orientation);
@@ -239,9 +230,6 @@ private:
   void init_tray_icon(const std::string& htmlPath);
   bool set_html_path(const std::string& path);
   void load_file(const QString &fileName);
-  void store_pos(bool consider_showed = false);
-  void store_window_pos();
-  void restore_pos(bool consider_showed = false);
   bool store_app_config();
   bool load_app_config();
   bool init_window();

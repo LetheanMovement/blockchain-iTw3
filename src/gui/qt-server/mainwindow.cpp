@@ -8,6 +8,7 @@
 #include <QtWebEngineWidgets>
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QMenu>
 
 #include "string_coding.h"
 #include "gui_utils.h"
@@ -200,7 +201,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
    }
    else if (m_gui_deinitialize_done_1 && m_backend_stopped_2)
    {
-     store_pos(true);
      store_app_config();
      event->accept();
    }
@@ -231,53 +231,6 @@ std::string state_to_text(int s)
 
   return res;
   CATCH_ENTRY2("");
-}
-
-void MainWindow::changeEvent(QEvent *e)
-{
-  TRY_ENTRY();
-  switch (e->type())
-  {
-  case QEvent::WindowStateChange:
-  {
-    QWindowStateChangeEvent* event = static_cast< QWindowStateChangeEvent* >(e);
-    qDebug() << "Old state: " << state_to_text(event->oldState()).c_str() << ", new state: " << state_to_text(this->windowState()).c_str();
-
-    if (event->oldState() & Qt::WindowMinimized && !(this->windowState() & Qt::WindowMinimized))
-    {
-      qDebug() << "Window restored (to normal or maximized state)!";
-      if (m_tray_icon)
-      {
-        //QTimer::singleShot(250, this, SLOT(show()));
-      }
-      restore_pos();
-    }
-    else if (!(event->oldState() & Qt::WindowMinimized) && (this->windowState() & Qt::WindowMinimized))
-    {
-      store_pos();
-      qDebug() << "Window minimized";
-      show_notification(m_localization[localization_id_minimized_title], m_localization[localization_id_minimized_text]);
-    }
-    else if (!(event->oldState() & Qt::WindowFullScreen) && (this->windowState() & Qt::WindowFullScreen))
-    {
-      //maximize
-      store_window_pos();
-      this->update();
-    }
-    else if ((event->oldState() & Qt::WindowFullScreen) && !(this->windowState() & Qt::WindowFullScreen))
-    {
-      //restore
-      this->update();
-    }
-
-    break;
-  }
-  default:
-    break;
-  }
-
-  QWidget::changeEvent(e);
-  CATCH_ENTRY2(void());
 }
 
 bool MainWindow::store_app_config()
@@ -318,15 +271,6 @@ bool MainWindow::init(const std::string& html_path)
   CATCH_ENTRY2(false);
 }
 
-void MainWindow::on_menu_show()
-{
-  TRY_ENTRY();
-  qDebug() << "Context menu: show()";
-  this->show();
-  this->activateWindow();
-  CATCH_ENTRY2(void());
-}
-
 void MainWindow::init_tray_icon(const std::string& html_path)
 {
   TRY_ENTRY();
@@ -346,11 +290,11 @@ void MainWindow::init_tray_icon(const std::string& html_path)
   m_minimize_action = std::unique_ptr<QAction>(new QAction(tr("minimizeAction"), this));
   connect(m_minimize_action.get(), SIGNAL(triggered()), this, SLOT(showMinimized()));
 
-  m_tray_icon_menu = std::unique_ptr<QMenu>(new QMenu(this));
-  m_tray_icon_menu->addAction(m_minimize_action.get());
-  //m_tray_icon_menu->addAction(m_restore_action.get());
-  m_tray_icon_menu->addSeparator();
-  m_tray_icon_menu->addAction(m_quit_action.get());
+//  m_tray_icon_menu = std::unique_ptr<QMenu>(new QMenu());
+//  m_tray_icon_menu->addAction(m_minimize_action.get());
+//  //m_tray_icon_menu->addAction(m_restore_action.get());
+//  m_tray_icon_menu->addSeparator();
+//  m_tray_icon_menu->addAction(m_quit_action.get());
 
   m_tray_icon = std::unique_ptr<QSystemTrayIcon>(new QSystemTrayIcon(this));
   m_tray_icon->setContextMenu(m_tray_icon_menu.get());
@@ -399,95 +343,6 @@ QString MainWindow::get_log_file()
   CATCH_ENTRY2("");
 }
 
-void  MainWindow::store_window_pos()
-{
-  TRY_ENTRY();
-  QPoint pos = this->pos();
-  QSize sz = this->size();
-  m_config.m_window_position.first = pos.x();
-  m_config.m_window_position.second = pos.y();
-  m_config.m_window_size.first = sz.height();
-  m_config.m_window_size.second = sz.width();
-
-  CATCH_ENTRY2(void());
-}
-void MainWindow::store_pos(bool consider_showed)
-{
-  TRY_ENTRY();
-  m_config.is_maximazed = this->isMaximized();
-  //here position supposed to be filled from last unserialize  or filled on maximize handler
-  if (!m_config.is_maximazed)
-    store_window_pos();
-  if (consider_showed)
-    m_config.is_showed = this->isVisible();
-
-  CATCH_ENTRY2(void());
-}
-void MainWindow::restore_pos(bool consider_showed)
-{
-  TRY_ENTRY();
-  if (m_config.is_maximazed)
-  {
-    this->setWindowState(windowState() | Qt::WindowMaximized);
-  }
-  else
-  {
-    QPoint point = QApplication::desktop()->screenGeometry().bottomRight();
-    if (m_config.m_window_position.first + m_config.m_window_size.second > point.x() ||
-      m_config.m_window_position.second + m_config.m_window_size.first > point.y()
-      )
-    {
-      QSize sz = AUTO_VAL_INIT(sz);
-      sz.setHeight(770);
-      sz.setWidth(1200);
-      this->resize(sz);
-      store_window_pos();
-      //reset position(screen changed or other reason)
-    }
-    else
-    {
-      QPoint pos = AUTO_VAL_INIT(pos);
-      QSize sz = AUTO_VAL_INIT(sz);
-      pos.setX(m_config.m_window_position.first);
-      pos.setY(m_config.m_window_position.second);
-      sz.setHeight(m_config.m_window_size.first);
-      sz.setWidth(m_config.m_window_size.second);
-      this->move(pos);
-      this->resize(sz);
-    }
-  }
-
-  if (consider_showed)
-  {
-    if (m_config.is_showed)
-      this->showNormal();
-    else
-      this->showMinimized();
-  }
-
-  CATCH_ENTRY2(void());
-}
-void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
-{
-  TRY_ENTRY();
-  if (reason == QSystemTrayIcon::ActivationReason::Trigger)
-  {
-    if ( !(this->windowState() & Qt::WindowMinimized))
-    {
-      showMinimized();
-    }
-    else
-    {
-      showNormal();
-      activateWindow();
-    }
-
-
-  }
-  CATCH_ENTRY2(void());
-}
-
-
 QString MainWindow::set_clipboard(const QString& param)
 {
   TRY_ENTRY();
@@ -518,13 +373,6 @@ QString MainWindow::on_request_quit()
   CATCH_ENTRY2(API_RETURN_CODE_INTERNAL_ERROR);
 }
 
-bool MainWindow::do_close()
-{
-  TRY_ENTRY();
-  this->close();
-  return true;
-  CATCH_ENTRY2(false);
-}
 
 bool MainWindow::on_backend_stopped()
 {
@@ -535,7 +383,7 @@ bool MainWindow::on_backend_stopped()
 //  if (m_quit_requested)
 //  {
 
-    /*bool r = */QMetaObject::invokeMethod(this, "do_close", Qt::QueuedConnection);
+//    /*bool r = */QMetaObject::invokeMethod(this, "do_close", Qt::QueuedConnection);
 // }
   return true;
   CATCH_ENTRY2(false);
@@ -560,14 +408,6 @@ bool MainWindow::update_daemon_status(const view::daemon_status_info& info)
   CATCH_ENTRY2(false);
 }
 
-
-bool MainWindow::show_msg_box(const std::string& message)
-{
-  TRY_ENTRY();
-  QMessageBox::information(this, "Error", message.c_str(), QMessageBox::Ok);
-  return true;
-  CATCH_ENTRY2(false);
-}
 
 void qt_log_message_handler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -1578,55 +1418,6 @@ QString MainWindow::webkit_launched_script()
   CATCH_ENTRY2(API_RETURN_CODE_INTERNAL_ERROR);
 }
 ////////////////////
-QString MainWindow::show_openfile_dialog(const QString& param)
-{
-  TRY_ENTRY();
-  view::system_filedialog_request ofdr = AUTO_VAL_INIT(ofdr);
-  view::system_filedialog_response ofdres = AUTO_VAL_INIT(ofdres);
-  if (!epee::serialization::load_t_from_json(ofdr, param.toStdString()))
-  {
-    ofdres.error_code = API_RETURN_CODE_BAD_ARG;
-    return epee::serialization::store_t_to_json(ofdres, 0, epee::serialization::eol_lf).c_str();
-  }
-
-  QString path = QFileDialog::getOpenFileName(this, ofdr.caption.c_str(),
-    ofdr.default_dir.c_str(),
-    ofdr.filemask.c_str());
-
-  if (!path.length())
-  {
-    ofdres.error_code = API_RETURN_CODE_CANCELED;
-    return epee::serialization::store_t_to_json(ofdres, 0, epee::serialization::eol_lf).c_str();
-  }
-
-  ofdres.error_code = API_RETURN_CODE_OK;
-  ofdres.path = path.toStdString();
-  return MAKE_RESPONSE(ofdres);
-  CATCH_ENTRY_FAIL_API_RESPONCE();
-}
-
-
-QString MainWindow::show_savefile_dialog(const QString& param)
-{
-  TRY_ENTRY();
-  PREPARE_ARG_FROM_JSON(view::system_filedialog_request, ofdr);
-  view::system_filedialog_response ofdres = AUTO_VAL_INIT(ofdres);
-
-  QString path = QFileDialog::getSaveFileName(this, ofdr.caption.c_str(),
-    ofdr.default_dir.c_str(),
-    ofdr.filemask.c_str());
-
-  if (!path.length())
-  {
-    ofdres.error_code = API_RETURN_CODE_CANCELED;
-    return epee::serialization::store_t_to_json(ofdres, 0, epee::serialization::eol_lf).c_str();
-  }
-
-  ofdres.error_code = API_RETURN_CODE_OK;
-  ofdres.path = path.toStdString();
-  return MAKE_RESPONSE(ofdres);
-  CATCH_ENTRY_FAIL_API_RESPONCE();
-}
 
 QString MainWindow::close_wallet(const QString& param)
 {
@@ -2054,43 +1845,6 @@ QString MainWindow::get_seed_phrase_info(const QString& param)
   CATCH_ENTRY_FAIL_API_RESPONCE();
 }
 
-void MainWindow::contextMenuEvent(QContextMenuEvent * event)
-{
-  TRY_ENTRY();
-
-  CATCH_ENTRY2(void());
-}
-QString MainWindow::print_text(const QString& param)
-{
-  TRY_ENTRY();
-  LOG_API_TIMING();
-  PREPARE_ARG_FROM_JSON(view::print_text_param, ptp);
-
-  //in >> htmlContent;
-
-  QTextDocument *document = new QTextDocument();
-  document->setHtml(ptp.html_text.c_str());
-
-  QPrinter printer;
-  default_ar.error_code = API_RETURN_CODE_CANCELED;
-
-  QPrintDialog *dialog = new QPrintDialog(&printer, this);
-  dialog->setOptions(QAbstractPrintDialog::PrintToFile);
-  auto res = dialog->exec();
-  if (res != QDialog::Accepted)
-  {
-    LOG_PRINT_L0("[PRINT_TEXT] exec  != QDialog::Accepted, res=" << res);
-    return MAKE_RESPONSE(default_ar);
-  }
-
-  document->print(&printer);
-
-  delete document;
-  default_ar.error_code = API_RETURN_CODE_OK;
-  LOG_PRINT_L0("[PRINT_TEXT] default_ar.error_code = " << default_ar.error_code);
-  return MAKE_RESPONSE(default_ar);
-  CATCH_ENTRY_FAIL_API_RESPONCE();
-}
 
 QString MainWindow::print_log(const QString& param)
 {
@@ -2121,5 +1875,13 @@ void MainWindow::show_notification(const std::string& title, const std::string& 
 #endif
   CATCH_ENTRY2(void());
 }
-
-
+QString MainWindow::get_wallet_info(const QString& param)
+{
+  TRY_ENTRY();
+  LOG_API_TIMING();
+  PREPARE_ARG_FROM_JSON(view::wallet_id_obj, waid);
+  PREPARE_RESPONSE(view::wallet_info, ar);
+  ar.error_code = m_backend.get_wallet_info(waid.wallet_id, ar.response_data);
+  return MAKE_RESPONSE(ar);
+  CATCH_ENTRY_FAIL_API_RESPONCE();
+}
