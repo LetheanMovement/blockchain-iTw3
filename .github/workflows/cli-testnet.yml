@@ -35,7 +35,7 @@ jobs:
           key: ccache-${{ runner.os }}-build-testnet-cli-${{ github.sha }}
           restore-keys: ccache-${{ runner.os }}-build-testnet-cli-
       - name: update apt
-        run: sudo apt update & sudo apt-get upgrade -y
+        run: sudo apt update
       - name: install dependencies
         run: sudo apt-get install -y python-dev autotools-dev libboost-all-dev libicu-dev libbz2-dev git screen checkinstall zlib1g-dev ccache miniupnpc
       - name: build server
