@@ -36,7 +36,7 @@ jobs:
       - name: update apt
         run: sudo apt update
       - name: install dependencies
-        run: sudo apt-get install -y qt5-default python-dev autotools-dev libboost-all-dev libicu-dev libbz2-dev git screen checkinstall zlib1g-dev ccache miniupnpc
+        run: sudo apt-get install -y qt5-default qtwebengine5-dev libqt5websockets5-dev python-dev autotools-dev libboost-all-dev libicu-dev libbz2-dev git screen checkinstall zlib1g-dev ccache miniupnpc
       - name: build server
         env:
           QT_PREFIX_PATH: /usr/lib/qt5
