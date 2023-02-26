@@ -116,7 +116,15 @@ jobs:
           choco install openssl --version 1.1.1.1500 -y
           choco install ccache -y
           choco install zip -y
-          choco install qt5-default --version 5.15.2.20211228 -y
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+            version: '5.15.2'
+            host: 'windows'
+            target: 'desktop'
+            arch: 'win64_msvc2019_64'
+            dir: '${{ github.workspace }}/example/'
+            modules: 'qtcharts qtwebengine'
       - name: install msvc toolset
         uses: ilammy/msvc-dev-cmd@v1
       - name: Install boost
@@ -136,7 +144,7 @@ jobs:
           arch: x64
       - name: build server
         env:
-          QT_PREFIX_PATH: C:\ProgramData\chocolatey\lib\Qt5.15.2\5.15.2
+          QT_PREFIX_PATH: ${{ github.workspace }}/example/Qt/5.15.2/win64_msvc2019_64
           BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
           LOCAL_BOOST_PATH: ${{ steps.install-boost.outputs.BOOST_ROOT }}
           OPENSSL_ROOT_DIR: "C:\\Program Files\\OpenSSL-Win64"
