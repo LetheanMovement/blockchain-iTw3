@@ -116,6 +116,7 @@ jobs:
           choco install openssl --version 1.1.1.1500 -y
           choco install ccache -y
           choco install zip -y
+          choco install qt5 --version 5.11.2 -y
       - name: install msvc toolset
         uses: ilammy/msvc-dev-cmd@v1
       - name: Install boost
@@ -142,14 +143,14 @@ jobs:
         run: |
           refreshenv
           ${{env.CCACHE_SETTINGS}}
-          .\utils\build\testnet_windows_cli.bat
+          .\utils\build\testnet_windows_gui.bat
       - uses: actions/upload-artifact@v3
         with:
-          name: lethean-windows-cli
+          name: lethean-gui-bundle-win-testnet-x64
           if-no-files-found: error
-          path: ${{ github.workspace }}\lethean-win-cli-*.zip
+          path: ${{ github.workspace }}\lethean-gui-bundle-win-testnet-x64.zip
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ${{ github.workspace }}/lethean-win-cli-*.zip
+          files: ${{ github.workspace }}\lethean-gui-bundle-win-testnet-x64.zip
