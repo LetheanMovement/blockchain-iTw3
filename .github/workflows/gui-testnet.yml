@@ -45,7 +45,7 @@ jobs:
           ./utils/build/testnet_linux_gui.sh
       - uses: actions/upload-artifact@v3
         with:
-          name: lethean-gui-bundle-linux-testnet-x86_64.tar.bz2
+          name: lethean-gui-bundle-linux-testnet-x86_64
           if-no-files-found: error
           path: lethean-gui-bundle-linux-testnet-x86_64.tar.bz2
       - name: Release
