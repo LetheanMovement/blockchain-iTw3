@@ -41,8 +41,6 @@ fi
 rm -rf Lethean;
 mkdir -p Lethean;
 
-cp -Rv ../../utils/Lethean.sh ./lethean-gui-server
-chmod 777 ./Lethean/Lethean.sh
 mkdir ./Lethean/lib
 cp $QT_PREFIX_PATH/lib/libicudata.so.56 ./Lethean/lib
 cp $QT_PREFIX_PATH/lib/libicui18n.so.56 ./Lethean/lib
@@ -80,7 +78,7 @@ cp $QT_PREFIX_PATH/plugins/xcbglintegrations/libqxcb-glx-integration.so ./Lethea
 package_filename=${ARCHIVE_NAME_PREFIX}.tar.bz2
 
 rm -f ./$package_filename
-tar -cjvf ../../../../$package_filename Lethean
+tar -cjvf ../../$package_filename Lethean
 if [ $? -ne 0 ]; then
     echo "Failed to pack"
     exit 1

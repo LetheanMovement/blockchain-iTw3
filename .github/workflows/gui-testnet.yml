@@ -31,28 +31,26 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: ~/.ccache
-          key: ccache-${{ runner.os }}-build-testnet-cli-${{ github.sha }}
-          restore-keys: ccache-${{ runner.os }}-build-testnet-cli-
+          key: ccache-${{ runner.os }}-build-testnet-gui
+          restore-keys: ccache-${{ runner.os }}-build-testnet-gui
       - name: update apt
         run: sudo apt update
       - name: install dependencies
-        run: sudo apt-get install -y python-dev autotools-dev libboost-all-dev libicu-dev libbz2-dev git screen checkinstall zlib1g-dev ccache miniupnpc
+        run: sudo apt-get install -y qt5-default python-dev autotools-dev libboost-all-dev libicu-dev libbz2-dev git screen checkinstall zlib1g-dev ccache miniupnpc
       - name: build server
         run: |
           ${{env.CCACHE_SETTINGS}}
-          ./utils/build/testnet_linux_cli.sh
-      - name: Move Tarball
-        run: cd build/release && mv lethean-linux-cli-*.tar.bz2 ../../
+          ./utils/build/testnet_linux_gui.sh
       - uses: actions/upload-artifact@v3
         with:
-          name: lethean-linux-cli
+          name: lethean-gui-bundle-linux-testnet-x86_64.tar.bz2
           if-no-files-found: error
-          path: lethean-linux-cli-*.tar.bz2
+          path: lethean-gui-bundle-linux-testnet-x86_64.tar.bz2
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ${{ github.workspace }}/lethean-linux-cli-*.tar.bz2
+          files: ${{ github.workspace }}/lethean-gui-bundle-linux-testnet-x86_64.tar.bz2
   macos-amd64:
     runs-on: macos-latest
     env:
