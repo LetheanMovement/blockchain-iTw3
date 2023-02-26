@@ -38,6 +38,8 @@ jobs:
       - name: install dependencies
         run: sudo apt-get install -y qt5-default python-dev autotools-dev libboost-all-dev libicu-dev libbz2-dev git screen checkinstall zlib1g-dev ccache miniupnpc
       - name: build server
+        env:
+          QT_PREFIX_PATH: /usr/lib/qt5
         run: |
           ${{env.CCACHE_SETTINGS}}
           ./utils/build/testnet_linux_gui.sh

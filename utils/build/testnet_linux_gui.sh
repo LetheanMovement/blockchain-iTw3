@@ -13,9 +13,6 @@
 
 ARCHIVE_NAME_PREFIX=lethean-gui-bundle-linux-testnet-$(arch)
 
-: "${BOOST_ROOT:?BOOST_ROOT should be set to the root of Boost, ex.: /home/user/boost_1_66_0}"
-: "${QT_PREFIX_PATH:?QT_PREFIX_PATH should be set to Qt libs folder, ex.: /home/user/Qt5.10.1/5.10.1/gcc_64}"
-: "${OPENSSL_ROOT_DIR:?OPENSSL_ROOT_DIR should be set to OpenSSL root folder, ex.: /home/user/openssl}"
 
 
 prj_root=$(pwd)
@@ -26,7 +23,7 @@ echo "--------------------------------------------------"
 echo "Building...."
 
 rm -rf build; mkdir -p build/release; cd build/release;
-cmake -D TESTNET=TRUE -D STATIC=true -D ARCH=x86-64 -D BUILD_GUI=TRUE -D OPENSSL_ROOT_DIR="$OPENSSL_ROOT_DIR" -D CMAKE_PREFIX_PATH="$QT_PREFIX_PATH" -D CMAKE_BUILD_TYPE=Release ../..
+cmake -D TESTNET=TRUE -D STATIC=true -D ARCH=x86-64 -D BUILD_GUI=TRUE -D CMAKE_BUILD_TYPE=Release ../..
 if [ $? -ne 0 ]; then
     echo "Failed to run cmake"
     exit 1
