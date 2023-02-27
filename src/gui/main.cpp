@@ -12,9 +12,9 @@
 #endif
 int main(int argc, char** argv)
 {
-  epee::log_space::get_set_log_detalisation_level(true, LOG_LEVEL_0);
-  epee::log_space::get_set_need_thread_id(true, true);
-  epee::log_space::log_singletone::enable_channels("core,currency_protocol,tx_pool,p2p,wallet");
+//  epee::log_space::get_set_log_detalisation_level(true, LOG_LEVEL_0);
+//  epee::log_space::get_set_need_thread_id(true, true);
+//  epee::log_space::log_singletone::enable_channels("core,currency_protocol,tx_pool,p2p,wallet");
 
   QApplication app(argc, argv, Qt::SubWindow);
 

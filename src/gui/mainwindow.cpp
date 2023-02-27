@@ -297,7 +297,7 @@ void MainWindow::init_tray_icon()
                                                                       //setWindowIcon(QIcon(iconPath.c_str()));
   //qi.setIsMask(true);
   m_tray_icon->setIcon(qi);
-  m_tray_icon->setToolTip(CURRENCY_NAME_BASE);
+  m_tray_icon->setToolTip(  "Lethean Blockchain API Server");
   m_tray_icon->show();
   CATCH_ENTRY2(void());
 }
