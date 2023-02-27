@@ -227,7 +227,7 @@ private:
 
 
 
-  void init_tray_icon(const std::string& htmlPath);
+  void init_tray_icon();
   bool set_html_path(const std::string& path);
   void load_file(const QString &fileName);
   bool store_app_config();

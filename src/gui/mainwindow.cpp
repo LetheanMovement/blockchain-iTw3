@@ -6,8 +6,6 @@
 
 #include <QtWidgets>
 #include <QtWebEngineWidgets>
-#include <QPrinter>
-#include <QPrintDialog>
 #include <QMenu>
 
 #include "string_coding.h"
@@ -271,7 +269,7 @@ bool MainWindow::init(const std::string& html_path)
   CATCH_ENTRY2(false);
 }
 
-void MainWindow::init_tray_icon(const std::string& html_path)
+void MainWindow::init_tray_icon()
 {
   TRY_ENTRY();
   if (!QSystemTrayIcon::isSystemTrayAvailable())
@@ -280,40 +278,26 @@ void MainWindow::init_tray_icon(const std::string& html_path)
     return;
   }
 
-
-  m_restore_action = std::unique_ptr<QAction>(new QAction(tr("&Restore"), this));
-  connect(m_restore_action.get(), SIGNAL(triggered()), this, SLOT(on_menu_show()));
-
   m_quit_action = std::unique_ptr<QAction>(new QAction(tr("&Quit"), this));
   connect(m_quit_action.get(), SIGNAL(triggered()), this, SLOT(tray_quit_requested()));
 
-  m_minimize_action = std::unique_ptr<QAction>(new QAction(tr("minimizeAction"), this));
-  connect(m_minimize_action.get(), SIGNAL(triggered()), this, SLOT(showMinimized()));
 
-//  m_tray_icon_menu = std::unique_ptr<QMenu>(new QMenu());
-//  m_tray_icon_menu->addAction(m_minimize_action.get());
-//  //m_tray_icon_menu->addAction(m_restore_action.get());
-//  m_tray_icon_menu->addSeparator();
-//  m_tray_icon_menu->addAction(m_quit_action.get());
+  m_tray_icon_menu = std::unique_ptr<QMenu>(new QMenu());
+  //m_tray_icon_menu->addAction(m_restore_action.get());
+  m_tray_icon_menu->addAction(m_quit_action.get());
 
   m_tray_icon = std::unique_ptr<QSystemTrayIcon>(new QSystemTrayIcon(this));
   m_tray_icon->setContextMenu(m_tray_icon_menu.get());
-
   //setup icon
 #ifdef TARGET_OS_MAC
-  m_normal_icon_path = html_path + "/files/app22macos.png"; // X11 tray icon size is 22x22
-  m_blocked_icon_path = html_path + "/files/app22macos_blocked.png"; // X11 tray icon size is 22x22
+  QIcon qi( ":/lthn.png" );
 #else
-  m_normal_icon_path = html_path + "/files/app22windows.png"; // X11 tray icon size is 22x22
-  m_blocked_icon_path = html_path + "/files/app22windows_blocked.png"; // X11 tray icon size
+  QIcon qi( ":/lthn.png" );
 #endif
                                                                       //setWindowIcon(QIcon(iconPath.c_str()));
-  QIcon qi( QString::fromWCharArray(epee::string_encoding::utf8_to_wstring(m_normal_icon_path).c_str()) );
-  qi.setIsMask(true);
+  //qi.setIsMask(true);
   m_tray_icon->setIcon(qi);
   m_tray_icon->setToolTip(CURRENCY_NAME_BASE);
-  connect(m_tray_icon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-    this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
   m_tray_icon->show();
   CATCH_ENTRY2(void());
 }
@@ -574,6 +558,8 @@ bool MainWindow::init_backend(int argc, char* argv[])
     this->show_msg_box("Failed to initialize IPC server, check debug logs for more details.");
     return false;
   }
+
+  init_tray_icon();
 
   return true;
   CATCH_ENTRY2(false);
