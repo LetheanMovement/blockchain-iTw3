@@ -164,4 +164,4 @@ jobs:
           name: ${{ github.ref }}
           tag_name: ${{ github.ref }}
           files: |
-            lethean-gui-bundle-win-testnet-*.zip
+            lethean-gui-bundle-win-testnet-*
