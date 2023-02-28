@@ -125,7 +125,7 @@ jobs:
             arch: 'win64_msvc2019_64'
             dir: '${{ github.workspace }}/example/'
             modules: 'qtcharts qtwebengine'
-            tools: 'tools_cmake tools_vcredist qt.tools.vcredist_msvc2015_x86 qt.tools.vcredist_msvc2019_x64'
+            tools: 'tools_cmake tools_vcredist'
       - name: install msvc toolset
         uses: ilammy/msvc-dev-cmd@v1
       - name: Install boost
