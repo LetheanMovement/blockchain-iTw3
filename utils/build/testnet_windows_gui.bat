@@ -88,16 +88,7 @@ windeployqt.exe bunch\lethean-gui-server.exe
 
 cd bunch
 
-zip -r %build_zip_path% *.*
-IF %ERRORLEVEL% NEQ 0 (
-  goto error
-)
-
-@echo "Add runtime stuff"
-
-
-cd %ETC_BINARIES_PATH%
-zip -r %build_zip_path% *.*
+zip -r %build_zip_path% *
 IF %ERRORLEVEL% NEQ 0 (
   goto error
 )

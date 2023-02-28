@@ -153,8 +153,8 @@ jobs:
           BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
           LOCAL_BOOST_PATH: ${{ steps.install-boost.outputs.BOOST_ROOT }}
           OPENSSL_ROOT_DIR: "C:\\Program Files\\OpenSSL-Win64"
+          CCACHE_TEMPDIR: ${{ github.workspace }}/ccache
         run: |
-          refreshenv
           ${{env.CCACHE_SETTINGS}}
           .\utils\build\testnet_windows_gui.bat
       - uses: actions/upload-artifact@v3
