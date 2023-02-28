@@ -2,7 +2,7 @@ call utils\build\extras\win\configure_local_paths.cmd
 
 ;; MSVC version-specific paths
 SET LOCAL_BOOST_LIB_PATH=%LOCAL_BOOST_PATH%\lib64-msvc-14.2
-SET QT_MSVC_PATH=%QT_PREFIX_PATH%\msvc2019_64
+SET QT_MSVC_PATH=%QT_PREFIX_PATH%
 
 SET ACHIVE_NAME_PREFIX=lethean-gui-bundle-win-testnet-x64
 SET MY_PATH=%~dp0
