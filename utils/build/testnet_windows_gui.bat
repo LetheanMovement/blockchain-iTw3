@@ -83,8 +83,8 @@ copy /Y letheand.exe bunch
 copy /Y simplewallet.exe bunch
 copy /Y *.pdb bunch
 
-copy /Y %OPENSSL_ROOT_DIR%\bin\libcrypto-1_1-x64.dll bunch
-copy /Y %OPENSSL_ROOT_DIR%\bin\libssl-1_1-x64.dll bunch
+copy /Y "%OPENSSL_ROOT_DIR%\bin\libcrypto-1_1-x64.dll" bunch
+copy /Y "%OPENSSL_ROOT_DIR%\bin\libssl-1_1-x64.dll" bunch
 
 %QT_MSVC_PATH%\bin\windeployqt.exe bunch\lethean-gui-server.exe
 
